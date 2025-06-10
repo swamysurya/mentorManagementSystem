@@ -1,34 +1,56 @@
-// src/App.js
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { RouteGuard } from './components/RouteGuard';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import MentorDashboard from './pages/MentorDashboard';
-import ProtectedRoute from './routes/ProtectedRoute';
-import { AuthProvider } from './context/AuthContext';
+import DoubtsTracker from './pages/DoubtsTracker';
+import NotFound from './pages/NotFound';
 
-function App() {
+const App = () => {
   return (
     <AuthProvider>
-      <Router>
+      <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<Login />} />
+          {/* Public Routes */}
+          <Route path="/login" element={
+            <RouteGuard requireAuth={false}>
+              <Login />
+            </RouteGuard>
+          } />
 
+          {/* Protected Routes */}
           <Route path="/admin" element={
-            <ProtectedRoute allowedRole="RP">
+            <RouteGuard allowedRole="RP">
               <AdminDashboard />
-            </ProtectedRoute>
-          }/>
+            </RouteGuard>
+          } />
 
           <Route path="/mentor" element={
-            <ProtectedRoute allowedRole="mentor">
+            <RouteGuard allowedRole="mentor">
               <MentorDashboard />
-            </ProtectedRoute>
-          }/>
+            </RouteGuard>
+          } />
 
+          <Route path="/doubts" element={
+            <RouteGuard allowedRole="mentor">
+              <DoubtsTracker />
+            </RouteGuard>
+          } />
+
+          {/* Root Redirect */}
+          <Route path="/" element={
+            <RouteGuard requireAuth={false}>
+              <Navigate to="/login" replace />
+            </RouteGuard>
+          } />
+
+          {/* 404 Route */}
+          <Route path="*" element={<NotFound />} />
         </Routes>
-      </Router>
+      </BrowserRouter>
     </AuthProvider>
   );
-}
+};
 
 export default App;
