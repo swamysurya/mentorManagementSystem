@@ -85,9 +85,9 @@ Backend runs on: http://localhost:5000
 ## License
 This project is licensed under the ISC License.
 
-@contributors
-### kushal kumar terli
-### saketh kasyap
-### meka charan
-### manikanta swamy amjuri
-### reddy raju
+## contributers
+1. saketh
+2. charan
+3. reddy raju
+4. kushal
+5. manikanta
