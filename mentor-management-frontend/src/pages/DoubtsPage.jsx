@@ -56,6 +56,16 @@ const DoubtsPage = () => {
     setDoubts((prev) => prev.filter((_, i) => i !== idx));
   };
 
+  // Helper to group doubts by date
+  const groupDoubtsByDate = (doubtsArr) => {
+    const groups = {};
+    doubtsArr.forEach((doubt, idx) => {
+      if (!groups[doubt.date]) groups[doubt.date] = [];
+      groups[doubt.date].push({ ...doubt, _idx: idx }); // Keep original index for deletion
+    });
+    return groups;
+  };
+
   return (
     <div className="doubts-container">
       <h2 style={{ marginBottom: 24 }}>Doubt Entry</h2>
@@ -132,49 +142,70 @@ const DoubtsPage = () => {
         Save
       </button>
       <div className="doubts-table-container">
-        <h3 style={{ marginBottom: 12 }}>Saved Doubts</h3>
-        <table className="doubts-table">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Section</th>
-              <th>Description</th>
-              <th>Subject</th>
-              <th>Resolution</th>
-              <th></th> {/* For delete icon */}
-            </tr>
-          </thead>
-          <tbody>
-            {doubts.length === 0 ? (
+        <h3 className="doubts-table-title" style={{ marginBottom: 12 }}>
+          Saved Doubts
+        </h3>
+        <div className="doubts-table-wrapper">
+          <table className="doubts-table">
+            <thead>
               <tr>
-                <td colSpan={6} className="doubts-table-empty">
-                  No doubts saved yet.
-                </td>
+                <th>Date</th>
+                <th>Section</th>
+                <th>Description</th>
+                <th>Subject</th>
+                <th>Resolution</th>
+                <th></th>
               </tr>
-            ) : (
-              doubts.map((row, idx) => (
-                <tr key={idx}>
-                  <td>{row.date}</td>
-                  <td>{row.section}</td>
-                  <td>{row.description}</td>
-                  <td>{row.subject}</td>
-                  <td>{row.resolution}</td>
-                  <td>
-                    <button
-                      className="delete-btn"
-                      title="Delete"
-                      onClick={() => handleDelete(idx)}
-                      type="button"
-                      aria-label="Delete"
-                    >
-                      <FiTrash />
-                    </button>
+            </thead>
+            <tbody>
+              {doubts.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="doubts-table-empty">
+                    No doubts saved yet.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                Object.entries(groupDoubtsByDate(doubts))
+                  .sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA)) // Newest date first
+                  .map(([date, group]) => (
+                    <React.Fragment key={date}>
+                      <tr className="date-group-row">
+                        <td
+                          colSpan={6}
+                          style={{
+                            fontWeight: "bold",
+                            background: "#f5f5f5",
+                          }}
+                        >
+                          {date}
+                        </td>
+                      </tr>
+                      {group.map((row) => (
+                        <tr key={row._idx}>
+                          <td>{row.date}</td>
+                          <td>{row.section}</td>
+                          <td>{row.description}</td>
+                          <td>{row.subject}</td>
+                          <td>{row.resolution}</td>
+                          <td>
+                            <button
+                              className="delete-btn"
+                              title="Delete"
+                              onClick={() => handleDelete(row._idx)}
+                              type="button"
+                              aria-label="Delete"
+                            >
+                              <FiTrash />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </React.Fragment>
+                  ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
