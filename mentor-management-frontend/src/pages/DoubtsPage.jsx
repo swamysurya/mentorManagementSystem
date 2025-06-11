@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "./DoubtsPage.css";
+import "../assets/styles/DoubtsPage.css";
 import { FiTrash } from "react-icons/fi";
 
 const SECTION_OPTIONS = Array.from({ length: 15 }, (_, i) => `Section ${i + 1}`);
@@ -143,7 +143,7 @@ const DoubtsPage = () => {
       </button>
       <div className="doubts-table-container">
         <h3 className="doubts-table-title">Saved Doubts</h3>
-        <div className="doubts-table-head-wrapper">
+        <div className="doubts-table-wrapper">
           <table className="doubts-table">
             <thead>
               <tr>
@@ -155,10 +155,6 @@ const DoubtsPage = () => {
                 <th></th>
               </tr>
             </thead>
-          </table>
-        </div>
-        <div className="doubts-table-body-wrapper">
-          <table className="doubts-table">
             <tbody>
               {doubts.length === 0 ? (
                 <tr>
