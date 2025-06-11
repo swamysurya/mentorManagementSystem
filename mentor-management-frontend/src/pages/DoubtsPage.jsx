@@ -142,10 +142,8 @@ const DoubtsPage = () => {
         Save
       </button>
       <div className="doubts-table-container">
-        <h3 className="doubts-table-title" style={{ marginBottom: 12 }}>
-          Saved Doubts
-        </h3>
-        <div className="doubts-table-wrapper">
+        <h3 className="doubts-table-title">Saved Doubts</h3>
+        <div className="doubts-table-head-wrapper">
           <table className="doubts-table">
             <thead>
               <tr>
@@ -157,6 +155,10 @@ const DoubtsPage = () => {
                 <th></th>
               </tr>
             </thead>
+          </table>
+        </div>
+        <div className="doubts-table-body-wrapper">
+          <table className="doubts-table">
             <tbody>
               {doubts.length === 0 ? (
                 <tr>

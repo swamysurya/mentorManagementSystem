@@ -106,6 +106,17 @@
   border: 1px solid #e0e0e0;
 }
 
+.doubts-table-head-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+.doubts-table-body-wrapper {
+  max-height: 50vh; /* or whatever height you want */
+  overflow-y: auto;
+  width: 100%;
+}
+
 .doubts-table {
   width: 100%;
   border-collapse: collapse;
@@ -114,12 +125,12 @@
 
 .doubts-table th,
 .doubts-table td {
-  box-sizing: border-box;
   padding: 8px;
   border-bottom: 1px solid #f3f3f3;
   text-align: left;
   white-space: pre-line;
   overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 .doubts-table th:nth-child(1),
