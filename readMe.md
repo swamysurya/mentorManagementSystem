@@ -1,93 +1,173 @@
+# 🎓 Mentor Management System
 
-## Features Implemented
+A full-stack web application for managing mentor-student interactions, built with React and Node.js. The system facilitates session scheduling, doubt resolution, and feedback management between mentors and students.
 
-### Authentication Flow
-1. User enters credentials
-2. Backend validates credentials
-3. JWT token generated on successful login
-4. Token stored in localStorage
-5. Role-based redirect (Admin → /admin, Mentor → /mentor)
+## ✨ Key Features
 
-### Protected Routes
-- Unauthorized users redirected to login
-- Role-specific access control
-- Persistent sessions using localStorage
+### 🔐 Authentication & Security
+- **JWT-based Authentication**
+  - Secure token generation and validation
+  - Role-based access control (Admin/Mentor)
+  - Token storage in localStorage
+  - Automatic role-based redirects
 
-### Error Handling
-- Invalid credentials
-- Network errors
-- Server connection issues
-- Timeout handling
+- **Protected Routes**
+  - Route guards for authenticated access
+  - Role-specific navigation
+  - Persistent sessions
+  - Secure logout mechanism
 
-## API Endpoints
+### 📊 Dashboard Features
+- **Schedule Management**
+  - Daily session overview
+  - Status tracking (Upcoming/Completed)
+  - Session duration and timing
+  - Quick session creation
 
-### POST /api/login
-- Authenticates users
-- Returns JWT token and user role
-- Handles invalid credentials
+- **Doubts Tracker**
+  - Priority levels (High/Medium/Low)
+  - Status management (Pending/In-Progress/Resolved)
+  - Filtering capabilities
+  - Quick response system
 
-### GET /api/protected
-- Example protected route
-- Requires valid JWT token
-- Returns user data from token
+- **Feedback System**
+  - Star rating implementation
+  - Detailed feedback collection
+  - Historical feedback tracking
+  - Performance metrics
 
-## Running the Project
+### 🎨 UI Components
+- **Modern Navigation**
+  - Responsive navbar
+  - Profile information display
+  - Role-based menu items
+  - Smooth logout process
 
-### Frontend
-```bash
-cd mentor-management-frontend
-pnpm install
-pnpm run dev
-```
-Frontend runs on: http://localhost:5173
+- **Interactive Dashboard**
+  - Tabbed interface
+  - Card-based layout
+  - Status indicators
+  - Action buttons
 
-### Backend
-```bash
-cd mentor-management-backend
-pnpm install
-pnpm dev
-```
-Backend runs on: http://localhost:5000
+- **Notification System**
+  - Toast notifications
+  - Error handling
+  - Success messages
+  - Loading states
 
-## Environment Setup
+## 🛠️ Technical Stack
+
+### Frontend (mentor-management-frontend)
+- React 19.1.0
+- React Router DOM 7.6.2
+- Axios 1.9.0
+- Vite 6.3.5
+- ESLint 9.25.0
+
+### Backend (mentor-management-backend)
+- Node.js
+- Express
+- JWT for authentication
+- CORS enabled
+
+## 🚀 Getting Started
+
+### Prerequisites
 - Node.js v22.14.0 or higher
-- npm or pnpm package manager
+- pnpm package manager
 - Modern web browser
 
-## Styling
-- Custom CSS with modern design principles
-- Responsive layout
-- Interactive elements with hover states
-- Form validation feedback
-- Loading states for better UX
+### Installation
 
-## Security Features
-- JWT-based authentication
-- Protected API endpoints
+1. **Clone the Repository**
+   ```bash
+   git clone [repository-url]
+   cd mentor-management-system
+   ```
+
+2. **Frontend Setup**
+   ```bash
+   cd mentor-management-frontend
+   pnpm install
+   pnpm dev
+   ```
+   Access at: http://localhost:5173
+
+3. **Backend Setup**
+   ```bash
+   cd mentor-management-backend
+   pnpm install
+   pnpm dev
+   ```
+   Server runs at: http://localhost:4000
+
+## 🔌 API Endpoints
+
+### Authentication
+- POST /api/login
+  - Authenticates users
+  - Returns: JWT token & user role
+  - Handles: Invalid credentials
+
+### Protected Routes
+- GET /api/protected
+  - Requires: Valid JWT token
+  - Returns: User data
+  - Handles: Authorization
+
+## 💅 Styling Features
+- Responsive design
+- Modern UI components
+- Interactive elements
+- Form validation styles
+- Loading animations
+- Mobile-first approach
+
+## 🔒 Security Measures
+- JWT authentication
+- Protected endpoints
 - Secure password handling
 - CORS configuration
 - HTTP-only cookies (planned)
 
-## Planned Features
-- User registration
-- Password reset functionality
-- Profile management
-- Session management
-- Enhanced security measures
+## 🛣️ Roadmap
+- [ ] User registration system
+- [ ] Password reset functionality
+- [ ] Enhanced profile management
+- [ ] Advanced session handling
+- [ ] Real-time notifications
+- [ ] File sharing capabilities
+- [ ] Video call integration
 
-## Contributing
+## 🤝 Contributing
 1. Fork the repository
 2. Create your feature branch
 3. Commit your changes
 4. Push to the branch
-5. Create a new Pull Request
+5. Submit a pull request
 
-## License
+## 👥 Contributors
+- Saketh
+- Charan
+- Reddy Raju
+- Kushal
+- Manikanta
+
+## 📄 License
 This project is licensed under the ISC License.
 
-## contributers
-1. saketh
-2. charan
-3. reddy raju
-4. kushal
-5. manikanta
+## 🐛 Known Issues
+- Session timezone handling improvements needed
+- Mobile view optimizations pending
+- Real-time updates to be implemented
+
+## 📞 Support
+For support or queries:
+- Create an issue in the repository
+- Contact: [support-email]
+- Join our developer community
+
+## 🙏 Acknowledgments
+- UI design inspiration from modern dashboards
+- Open source community
+- All contributors and testers
