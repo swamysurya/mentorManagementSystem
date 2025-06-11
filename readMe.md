@@ -1,13 +1,13 @@
 # 🎓 Mentor Management System
 
-A full-stack web application for managing mentor-student interactions, built with React and Node.js. The system facilitates session scheduling, doubt resolution, and feedback management between mentors and students.
+A comprehensive platform for managing mentor-mentee relationships, feedback, and scheduling in an educational environment.
 
 ## ✨ Key Features
 
 ### 🔐 Authentication & Security
 - **JWT-based Authentication**
   - Secure token generation and validation
-  - Role-based access control (Admin/Mentor)
+  - Role-based access control (RP/Admin and Mentor roles)
   - Token storage in localStorage
   - Automatic role-based redirects
 
@@ -31,10 +31,18 @@ A full-stack web application for managing mentor-student interactions, built wit
   - Quick response system
 
 - **Feedback System**
-  - Star rating implementation
-  - Detailed feedback collection
+  - Google Forms style feedback interface
+  - Once-per-day submission restriction
+  - Comprehensive feedback categories:
+    - Student engagement rating
+    - Overall performance evaluation
+    - Concerns and irregularities tracking
+    - Positive notes
+    - Suggestions for improvement
+    - Additional comments
+  - Real-time validation
+  - Success notifications
   - Historical feedback tracking
-  - Performance metrics
 
 ### 🎨 UI Components
 - **Modern Navigation**
