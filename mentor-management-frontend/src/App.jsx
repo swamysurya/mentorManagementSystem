@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
 import MentorDashboard from './pages/MentorDashboard';
-import ProtectedRoute from './routes/ProtectedRoute';
-import { AuthProvider } from './context/AuthContext';
+import DoubtsTracker from './pages/DoubtsTracker';
+import NotFound from './pages/NotFound';
 
 function App() {
   return (
@@ -22,8 +22,21 @@ function App() {
           <Route path="/mentor" element={
             <ProtectedRoute allowedRole="mentor">
               <MentorDashboard />
-            </ProtectedRoute>
-          }/>
+            </RouteGuard>
+          } />
+
+          <Route path="/doubts" element={
+            <RouteGuard allowedRole="mentor">
+              <DoubtsTracker />
+            </RouteGuard>
+          } />
+
+          {/* Root Redirect */}
+          <Route path="/" element={
+            <RouteGuard requireAuth={false}>
+              <Navigate to="/login" replace />
+            </RouteGuard>
+          } />
 
         </Routes>
       </Router>
