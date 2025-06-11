@@ -86,19 +86,19 @@ A full-stack web application for managing mentor-student interactions, built wit
    ```
 
 2. **Frontend Setup**
-   ```bash
-   cd mentor-management-frontend
-   pnpm install
+```bash
+cd mentor-management-frontend
+pnpm install
    pnpm dev
-   ```
+```
    Access at: http://localhost:5173
 
 3. **Backend Setup**
-   ```bash
-   cd mentor-management-backend
-   pnpm install
-   pnpm dev
-   ```
+```bash
+cd mentor-management-backend
+pnpm install
+pnpm dev
+```
    Server runs at: http://localhost:4000
 
 ## 🔌 API Endpoints
