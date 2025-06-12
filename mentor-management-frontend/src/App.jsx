@@ -57,7 +57,7 @@ const App = () => {
             <RouteGuard requireAuth={false}>
               <Navigate to="/login" replace />
             </RouteGuard>
-          } />
+          } />  
 
           {/* 404 Route */}
           <Route path="*" element={<NotFound />} />

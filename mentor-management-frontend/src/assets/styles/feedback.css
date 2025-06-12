@@ -4,7 +4,7 @@
 }
 
 .page-content {
-  padding: 2rem;
+  padding: 80px 2rem 2rem; /* Combined padding for better readability */
   /* max-width: 768px; Done by Kushal*/
   margin: 0 auto;
 }

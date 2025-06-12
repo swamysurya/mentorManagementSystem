@@ -5,7 +5,7 @@
 }
 
 .page-content {
-  padding: 2rem;
+  padding: 80px 2rem 2rem; /* Combined padding for better readability */
   max-width: 1200px;
   margin: 0 auto;
 }
@@ -31,7 +31,10 @@
   border-radius: 0.5rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .add-button:hover {
@@ -48,7 +51,13 @@
   background: white;
   border-radius: 0.75rem;
   padding: 1.5rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.schedule-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .empty-state {
@@ -57,11 +66,12 @@
   background: white;
   border-radius: 0.75rem;
   color: #64748b;
+  margin-top: 2rem;
 }
 
 @media (max-width: 640px) {
   .page-content {
-    padding: 1rem;
+    padding: 72px 1rem 1rem;
   }
 
   .page-header {
@@ -72,6 +82,7 @@
 
   .page-header h1 {
     font-size: 1.5rem;
+    text-align: center;
   }
 
   .add-button {
