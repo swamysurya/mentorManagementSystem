@@ -1,1 +1,1 @@
-select * from users_profile;
+SELECt * FROM student_doubts;

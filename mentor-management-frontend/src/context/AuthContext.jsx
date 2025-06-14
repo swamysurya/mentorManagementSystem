@@ -61,6 +61,8 @@ export function AuthProvider({ children }) {
       // Remove cookies
       Cookies.remove("token", { path: "/" });
       Cookies.remove("role", { path: "/" });
+      Cookies.remove("firstName", { path: "/" });
+      Cookies.remove("lastName", { path: "/" });
       setUser(null);
     } catch (error) {
       console.error("Error removing cookies:", error);

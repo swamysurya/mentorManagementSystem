@@ -28,3 +28,31 @@ Content-Type: application/json
     "email": "charan@nxtwave.co.in",
     "password": "charan123"
 }
+
+###
+GET http://localhost:4000/doubts/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+
+###
+POST http://localhost:4000/doubts/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+Content-Type: application/json
+
+{
+    "description": "I am facing difficulty in understanding the concept of inheritance in Java",
+    "section_id": 1,
+    "subject_id": 3,
+    "resolution_status": "Unresolved"
+}
+
+###
+DELETE http://localhost:4000/doubts/3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+
+###
+GET http://localhost:4000/options/sections
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+
+###
+GET http://localhost:4000/options/subjects
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
