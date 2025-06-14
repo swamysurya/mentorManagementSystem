@@ -9,14 +9,16 @@ export function AuthProvider({ children }) {
     try {
       const token = Cookies.get("token");
       const role = Cookies.get("role");
-      return token && role ? { token, role } : null;
+      const firstName = Cookies.get("firstName");
+      const lastName = Cookies.get("lastName");
+      return token && role ? { token, role, firstName, lastName } : null;
     } catch (error) {
       console.error("Error reading from cookies:", error);
       return null;
     }
   });
 
-  const login = useCallback((token, role) => {
+  const login = useCallback((token, role, firstName, lastName) => {
     try {
       // Set cookies with secure options
       Cookies.set("token", token, {
@@ -33,7 +35,21 @@ export function AuthProvider({ children }) {
         path: "/",
       });
 
-      setUser({ token, role });
+      Cookies.set("firstName", firstName, {
+        expires: 1,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+
+      Cookies.set("lastName", lastName, {
+        expires: 1,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+
+      setUser({ token, role, firstName, lastName });
     } catch (error) {
       console.error("Error saving to cookies:", error);
       throw new Error("Failed to login");

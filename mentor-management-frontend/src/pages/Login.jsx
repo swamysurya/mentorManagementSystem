@@ -61,10 +61,11 @@ export default function Login() {
 
       if (res.data.status === "success") {
         const { token } = res.data.data;
-        login(token, res.data.data.user.role);
+        const { role, first_name, last_name } = res.data.data.user;
+        login(token, role, first_name, last_name);
 
         // Navigate based on role
-        if (res.data.data.user.role === "RP") {
+        if (role === "RP") {
           navigate("/admin");
         } else {
           navigate("/mentor");
