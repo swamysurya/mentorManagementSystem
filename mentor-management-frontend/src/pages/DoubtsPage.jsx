@@ -2,8 +2,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../assets/styles/DoubtsPage.css";
 import { FiTrash } from "react-icons/fi";
+import "../assets/styles/doubts.css";
+import Navbar from "../components/Navbar";
 
-const SECTION_OPTIONS = Array.from({ length: 15 }, (_, i) => `Section ${i + 1}`);
+const SECTION_OPTIONS = Array.from(
+  { length: 15 },
+  (_, i) => `Section ${i + 1}`
+);
 const SUBJECT_OPTIONS = [
   "C++",
   "DSA",
@@ -59,7 +64,7 @@ const DoubtsPage = () => {
   };
 
   const handleBack = () => {
-    navigate('/mentor');
+    navigate("/mentor");
   };
 
   // Helper to group doubts by date
@@ -73,163 +78,170 @@ const DoubtsPage = () => {
   };
 
   return (
-    <div className="doubts-container">
-      <div className="page-header">
-        <button onClick={handleBack} className="back-button">
-          <svg 
-            className="back-icon" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path 
-              d="M19 12H5M5 12L12 19M5 12L12 5" 
-              stroke="currentColor" 
-              strokeWidth="2" 
-              strokeLinecap="round" 
-              strokeLinejoin="round"
-            />
-          </svg>
-          Back to Dashboard
-        </button>
-        <h2 style={{ marginBottom: 24 }}>Doubt Entry</h2>
-      </div>
-      <form onSubmit={handleSave} className="doubts-form">
-        <div className="doubts-form-group">
-          <label>Date</label>
-          <input
-            type="date"
-            name="date"
-            value={form.date}
-            onChange={handleChange}
-            max={getToday()}
-            required
-          />
-        </div>
-        <div className="doubts-form-group">
-          <label>Section</label>
-          <select
-            name="section"
-            value={form.section}
-            onChange={handleChange}
-            required
-          >
-            {SECTION_OPTIONS.map((sec) => (
-              <option key={sec} value={sec}>
-                {sec}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="doubts-form-group description-group">
-          <label>Doubt Description</label>
-          <input
-            type="text"
-            name="description"
-            value={form.description}
-            onChange={handleChange}
-            placeholder="Enter doubt description"
-            required
-          />
-        </div>
-        <div className="doubts-form-group">
-          <label>Subject</label>
-          <select
-            name="subject"
-            value={form.subject}
-            onChange={handleChange}
-            required
-          >
-            {SUBJECT_OPTIONS.map((sub) => (
-              <option key={sub} value={sub}>
-                {sub}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="doubts-form-group">
-          <label>Resolution</label>
-          <select
-            name="resolution"
-            value={form.resolution}
-            onChange={handleChange}
-            required
-          >
-            {RESOLUTION_OPTIONS.map((res) => (
-              <option key={res} value={res}>
-                {res}
-              </option>
-            ))}
-          </select>
-        </div>
-      </form>
-      <button onClick={handleSave} className="doubts-save-btn">
-        Save
-      </button>
-      <div className="doubts-table-container">
-        <h3 className="doubts-table-title">Saved Doubts</h3>
-        <div className="doubts-table-wrapper">
-          <table className="doubts-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Section</th>
-                <th>Description</th>
-                <th>Subject</th>
-                <th>Resolution</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {doubts.length === 0 ? (
-                <tr>
-                  <td colSpan={6} className="doubts-table-empty">
-                    No doubts saved yet.
-                  </td>
-                </tr>
-              ) : (
-                Object.entries(groupDoubtsByDate(doubts))
-                  .sort(([dateA], [dateB]) => new Date(dateB) - new Date(dateA)) // Newest date first
-                  .map(([date, group]) => (
-                    <React.Fragment key={date}>
-                      <tr className="date-group-row">
-                        <td
-                          colSpan={6}
-                          style={{
-                            fontWeight: "bold",
-                            background: "#f5f5f5",
-                          }}
-                        >
-                          {date}
-                        </td>
-                      </tr>
-                      {group.map((row) => (
-                        <tr key={row._idx}>
-                          <td>{row.date}</td>
-                          <td>{row.section}</td>
-                          <td>{row.description}</td>
-                          <td>{row.subject}</td>
-                          <td>{row.resolution}</td>
-                          <td>
-                            <button
-                              className="delete-btn"
-                              title="Delete"
-                              onClick={() => handleDelete(row._idx)}
-                              type="button"
-                              aria-label="Delete"
+    <div className="page-container">
+      <Navbar />
+      <main className="page-content">
+        <div className="doubts-container">
+          <div className="page-header">
+            <button onClick={handleBack} className="back-button">
+              <svg
+                className="back-icon"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M19 12H5M5 12L12 19M5 12L12 5"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+              Back to Dashboard
+            </button>
+            <h2 style={{ marginBottom: 24 }}>Doubt Entry</h2>
+          </div>
+          <form onSubmit={handleSave} className="doubts-form">
+            <div className="doubts-form-group">
+              <label>Date</label>
+              <input
+                type="date"
+                name="date"
+                value={form.date}
+                onChange={handleChange}
+                max={getToday()}
+                required
+              />
+            </div>
+            <div className="doubts-form-group">
+              <label>Section</label>
+              <select
+                name="section"
+                value={form.section}
+                onChange={handleChange}
+                required
+              >
+                {SECTION_OPTIONS.map((sec) => (
+                  <option key={sec} value={sec}>
+                    {sec}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="doubts-form-group description-group">
+              <label>Doubt Description</label>
+              <input
+                type="text"
+                name="description"
+                value={form.description}
+                onChange={handleChange}
+                placeholder="Enter doubt description"
+                required
+              />
+            </div>
+            <div className="doubts-form-group">
+              <label>Subject</label>
+              <select
+                name="subject"
+                value={form.subject}
+                onChange={handleChange}
+                required
+              >
+                {SUBJECT_OPTIONS.map((sub) => (
+                  <option key={sub} value={sub}>
+                    {sub}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="doubts-form-group">
+              <label>Resolution</label>
+              <select
+                name="resolution"
+                value={form.resolution}
+                onChange={handleChange}
+                required
+              >
+                {RESOLUTION_OPTIONS.map((res) => (
+                  <option key={res} value={res}>
+                    {res}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </form>
+          <button onClick={handleSave} className="doubts-save-btn">
+            Save
+          </button>
+          <div className="doubts-table-container">
+            <h3 className="doubts-table-title">Saved Doubts</h3>
+            <div className="doubts-table-wrapper">
+              <table className="doubts-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Section</th>
+                    <th>Description</th>
+                    <th>Subject</th>
+                    <th>Resolution</th>
+                    <th></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {doubts.length === 0 ? (
+                    <tr>
+                      <td colSpan={6} className="doubts-table-empty">
+                        No doubts saved yet.
+                      </td>
+                    </tr>
+                  ) : (
+                    Object.entries(groupDoubtsByDate(doubts))
+                      .sort(
+                        ([dateA], [dateB]) => new Date(dateB) - new Date(dateA)
+                      ) // Newest date first
+                      .map(([date, group]) => (
+                        <React.Fragment key={date}>
+                          <tr className="date-group-row">
+                            <td
+                              colSpan={6}
+                              style={{
+                                fontWeight: "bold",
+                                background: "#f5f5f5",
+                              }}
                             >
-                              <FiTrash />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </React.Fragment>
-                  ))
-              )}
-            </tbody>
-          </table>
+                              {date}
+                            </td>
+                          </tr>
+                          {group.map((row) => (
+                            <tr key={row._idx}>
+                              <td>{row.date}</td>
+                              <td>{row.section}</td>
+                              <td>{row.description}</td>
+                              <td>{row.subject}</td>
+                              <td>{row.resolution}</td>
+                              <td>
+                                <button
+                                  className="delete-btn"
+                                  title="Delete"
+                                  onClick={() => handleDelete(row._idx)}
+                                  type="button"
+                                  aria-label="Delete"
+                                >
+                                  <FiTrash />
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </React.Fragment>
+                      ))
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

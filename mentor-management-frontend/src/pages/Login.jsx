@@ -1,21 +1,21 @@
-import { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
-import ToastContainer from '../components/ToastContainer';
-import '../assets/styles/login.css';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../hooks/useAuth";
+import api from "../utils/axios";
+import ToastContainer from "../components/ToastContainer";
+import "../assets/styles/login.css";
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const addMessage = (text, type = 'error') => {
+  const addMessage = (text, type = "error") => {
     const id = Date.now();
-    setMessages(prev => {
+    setMessages((prev) => {
       // Keep only the last 3 messages
       const newMessages = [...prev, { id, text, type }];
       if (newMessages.length > 3) {
@@ -26,26 +26,26 @@ export default function Login() {
   };
 
   const removeMessage = (id) => {
-    setMessages(prev => prev.filter(msg => msg.id !== id));
+    setMessages((prev) => prev.filter((msg) => msg.id !== id));
   };
 
   const validateForm = () => {
     if (!email && !password) {
-      addMessage('Email and password are required');
+      addMessage("Email and password are required");
       return false;
     }
     if (!email) {
-      addMessage('Email is required');
+      addMessage("Email is required");
       return false;
     }
     if (!password) {
-      addMessage('Password is required');
+      addMessage("Password is required");
       return false;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      addMessage('Please enter a valid email address');
+      addMessage("Please enter a valid email address");
       return false;
     }
 
@@ -54,44 +54,32 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!validateForm()) return;
-
     setLoading(true);
 
     try {
-      const res = await axios.post('http://localhost:4000/api/login', 
-        { email, password },
-        {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          timeout: 5000,
-        }
-      );
+      const res = await api.post("/auth/login", { email, password });
 
-      if (res.data.status === 'success') {
-        login(res.data.data.token, res.data.data.role);
-        if (res.data.data.role === 'RP') {
-          navigate('/admin');
+      if (res.data.status === "success") {
+        const { token } = res.data.data;
+        login(token, res.data.data.user.role);
+
+        // Navigate based on role
+        if (res.data.data.user.role === "RP") {
+          navigate("/admin");
         } else {
-          navigate('/mentor');
+          navigate("/mentor");
         }
       }
     } catch (err) {
-      console.error('Login error:', err);
-      
-      if (err.code === 'ECONNABORTED') {
-        addMessage('Request timed out. Please try again.');
-      } else if (err.code === 'ERR_NETWORK') {
-        addMessage('Unable to connect to the server. Please check your internet connection.');
-      } else if (err.response) {
-        addMessage(err.response.data.message || 'Login failed');
-      } else if (err.request) {
-        addMessage('No response from server. Please try again later.');
-      } else {
-        addMessage('An unexpected error occurred. Please try again.');
-      }
+      console.error("Login error:", err);
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          text: err.response?.data?.message || "Login failed",
+          type: "error",
+        },
+      ]);
     } finally {
       setLoading(false);
     }
@@ -123,23 +111,16 @@ export default function Login() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="login-button"
-            disabled={loading}
-          >
+          <button type="submit" className="login-button" disabled={loading}>
             {loading ? (
               <span className="loading-text">Signing in...</span>
             ) : (
-              'Sign in'
+              "Sign in"
             )}
           </button>
         </form>
       </div>
-      <ToastContainer 
-        messages={messages}
-        removeMessage={removeMessage}
-      />
+      <ToastContainer messages={messages} removeMessage={removeMessage} />
     </div>
   );
 }

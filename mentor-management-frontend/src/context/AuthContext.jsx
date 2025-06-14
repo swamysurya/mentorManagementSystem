@@ -1,54 +1,68 @@
-import { createContext, useState, useCallback, useMemo } from 'react';
-import PropTypes from 'prop-types';
+import { createContext, useState, useCallback, useMemo } from "react";
+import Cookies from "js-cookie";
+import PropTypes from "prop-types";
 
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
     try {
-      const token = localStorage.getItem('token');
-      const role = localStorage.getItem('role');
+      const token = Cookies.get("token");
+      const role = Cookies.get("role");
       return token && role ? { token, role } : null;
     } catch (error) {
-      console.error('Error reading from localStorage:', error);
+      console.error("Error reading from cookies:", error);
       return null;
     }
   });
 
   const login = useCallback((token, role) => {
     try {
-      localStorage.setItem('token', token);
-      localStorage.setItem('role', role);
+      // Set cookies with secure options
+      Cookies.set("token", token, {
+        expires: 1, // 1 day
+        secure: true, // Only sent over HTTPS
+        sameSite: "strict", // CSRF protection
+        path: "/", // Available across the site
+      });
+
+      Cookies.set("role", role, {
+        expires: 1,
+        secure: true,
+        sameSite: "strict",
+        path: "/",
+      });
+
       setUser({ token, role });
     } catch (error) {
-      console.error('Error saving to localStorage:', error);
-      throw new Error('Failed to login');
+      console.error("Error saving to cookies:", error);
+      throw new Error("Failed to login");
     }
   }, []);
 
   const logout = useCallback(() => {
     try {
-      localStorage.removeItem('token');
-      localStorage.removeItem('role');
+      // Remove cookies
+      Cookies.remove("token", { path: "/" });
+      Cookies.remove("role", { path: "/" });
       setUser(null);
     } catch (error) {
-      console.error('Error removing from localStorage:', error);
-      throw new Error('Failed to logout');
+      console.error("Error removing cookies:", error);
+      throw new Error("Failed to logout");
     }
   }, []);
 
-  const value = useMemo(() => ({
-    user,
-    login,
-    logout,
-    isAuthenticated: !!user,
-  }), [user, login, logout]);
-
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      user,
+      login,
+      logout,
+      isAuthenticated: !!user,
+    }),
+    [user, login, logout]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 AuthProvider.propTypes = {
