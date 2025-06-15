@@ -1,1 +1,1 @@
-SELECt * FROM student_doubts;
+SELECT * FROM feedback

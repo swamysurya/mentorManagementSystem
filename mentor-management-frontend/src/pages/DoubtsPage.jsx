@@ -26,6 +26,7 @@ const DoubtsPage = () => {
   const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [formErrors, setFormErrors] = useState({});
 
   // Fetch sections and subjects on component mount
   useEffect(() => {
@@ -80,6 +81,11 @@ const DoubtsPage = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+
+    // Clear error message when description field is being modified
+    if (name === "description") {
+      setFormErrors({});
+    }
   };
 
   const resetForm = () => {
@@ -92,35 +98,30 @@ const DoubtsPage = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    setFormErrors({}); // Clear previous errors
+
+    // Validate only description field
     if (!form.description || form.description.trim().length === 0) {
-      alert("Please enter a valid doubt description.");
+      setFormErrors({ description: "Doubt description is required" });
       return;
     }
 
     try {
-      const response = await api.post("/doubts", {
+      await api.post("/doubts", {
         description: form.description,
-        section_id: parseInt(form.section_id), // Ensure it's a number
-        subject_id: parseInt(form.subject_id), // Ensure it's a number
+        section_id: parseInt(form.section_id),
+        subject_id: parseInt(form.subject_id),
         resolution_status: form.resolution,
         date: form.date,
       });
-      // console.log("doubts response", response);
-      setDoubts((prev) => [response.data.data, ...prev]);
+
+      // Refetch all doubts after successful creation
+      const response = await api.get("/doubts");
+      setDoubts(response.data.data);
       resetForm();
     } catch (err) {
-      console.error("Error details:", {
-        message: err.message,
-        response: err.response?.data,
-        status: err.response?.status,
-        requestData: form,
-      });
-
-      // Show more specific error message
-      const errorMessage =
-        err.response?.data?.message ||
-        "Failed to save doubt. Please try again.";
-      alert(errorMessage);
+      console.error("Error details:", err);
+      setFormErrors({ description: "Failed to save doubt. Please try again." });
     }
   };
 
@@ -159,6 +160,15 @@ const DoubtsPage = () => {
   const getSubjectName = (subjectId) => {
     const subject = subjects.find((s) => s.subject_id === parseInt(subjectId));
     return subject ? subject.subject_name : "Unknown Subject";
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
   };
 
   if (loading) {
@@ -244,7 +254,11 @@ const DoubtsPage = () => {
                 onChange={handleChange}
                 placeholder="Enter doubt description"
                 required
+                className={formErrors.description ? "error" : ""}
               />
+              {formErrors.description && (
+                <span className="field-error">{formErrors.description}</span>
+              )}
             </div>
             <div className="doubts-form-group">
               <label>Subject</label>
@@ -313,18 +327,18 @@ const DoubtsPage = () => {
                               colSpan={6}
                               style={{
                                 fontWeight: "bold",
-                                background: "#f5f5f5",
+                                background: "rgb(206 207 243)",
                               }}
                             >
-                              {date}
+                              {formatDate(date)}
                             </td>
                           </tr>
                           {group.map((row) => (
                             <tr key={row.doubt_id}>
-                              <td>{row.date}</td>
-                              <td>{getSectionName(row.section_id)}</td>
+                              <td>{formatDate(row.date)}</td>
+                              <td>{row.section_name}</td>
                               <td>{row.description}</td>
-                              <td>{getSubjectName(row.subject_id)}</td>
+                              <td>{row.subject_name}</td>
                               <td>{row.resolution_status}</td>
                               <td>
                                 <button

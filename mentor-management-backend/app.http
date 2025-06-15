@@ -4,6 +4,9 @@ GET http://localhost:4000/users/
 GET http://localhost:4000/users/15
 
 ###
+
+
+###
 POST http://localhost:4000/users/
 Content-Type: application/json
 
@@ -55,4 +58,34 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlb
 
 ###
 GET http://localhost:4000/options/subjects
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+
+
+### Submit Feedback
+POST http://localhost:4000/feedback/
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+Content-Type: application/json
+
+{
+    "section_id": 1,
+    "date": "2024-03-10",
+    "student_engagement": 4,
+    "overall_performance": 4,
+    "concern_status": "general",
+    "positive_notes": "Students were actively participating in the discussion. Good understanding of concepts.",
+    "suggestions": "Could include more practical examples",
+    "additional_feedback": "Overall good session"
+}
+
+### Get Feedback History for a specific date
+GET http://localhost:4000/feedback/history?date=2024-03-15
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+
+###
+GET http://localhost:4000/feedback/history
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+
+###
+
+GET http://localhost:4000/feedback/dates
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
