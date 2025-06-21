@@ -8,6 +8,7 @@ import SchedulePage from "./pages/SchedulePage";
 import DoubtsPage from "./pages/DoubtsPage";
 import FeedbackPage from "./pages/FeedbackPage";
 import NotFound from "./pages/NotFound";
+import IssuesPage from "./pages/IssuesPage";
 
 const App = () => {
   return (
@@ -66,6 +67,15 @@ const App = () => {
             element={
               <RouteGuard allowedRole="mentor">
                 <FeedbackPage />
+              </RouteGuard>
+            }
+          />
+
+          <Route
+            path="/issues"
+            element={
+              <RouteGuard allowedRole="mentor">
+                <IssuesPage />
               </RouteGuard>
             }
           />

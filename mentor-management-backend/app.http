@@ -89,3 +89,125 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlb
 
 GET http://localhost:4000/feedback/dates
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc0OTg5NzQ0NiwiZXhwIjoxNzUwMDcwMjQ2fQ.Zc68XT-rZSL5JUx6hHUaUnkOfos2RIcZ_W3qZXeO6fY
+
+###
+# Upload a file to Cloudinary
+POST http://localhost:4000/api/upload-media
+Content-Type: multipart/form-data; boundary=MyBoundary
+
+--MyBoundary
+Content-Disposition: form-data; name="file"; filename="test.jpg"
+Content-Type: image/jpeg
+
+< ./home/manikanta/Desktop/GIT/ReactProjects/mentor-management-system/image.png
+--MyBoundary--
+
+###
+GET http://localhost:4000/api/cloudinary-status
+
+### Test Issues API
+
+### Create Content Issue
+POST http://localhost:4000/api/issues
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc1MDUyMjUxOSwiZXhwIjoxNzUwNjk1MzE5fQ.Mjap5vDURQAZxpYjD0K1a3-OK7K58gVlUojM5hJMJl8
+
+{
+  "type": "content",
+  "title": "Incorrect information in Chapter 3",
+  "description": "The formula on page 45 is incorrect and doesn't match the examples provided.",
+  "status": "open",
+  "page_link": "https://learning.ccbp.in/course?c_id=62e43c70-ee74-4afe-8d1c-26ca9c22947a&t_id=556f8d68-999b-4d83-9d85-df5c1e343b15&s_id=061be351-e352-4755-8bad-5d36adc1c17d",
+  "category": "mathematics",
+  "subject": "Calculus",
+  "issue_type": "error",
+  "student_id": "STU001",
+  "student_name": "John Doe",
+  "media": [
+    "https://res.cloudinary.com/davv8r8v4/image/upload/v1750530592/nfexqum82djtjzx0eiu2.png",
+    "https://res.cloudinary.com/davv8r8v4/video/upload/v1750532057/wcktp5hnofmtdsaxtobs.webm"
+  ]
+}
+
+### Create Technical Issue
+POST http://localhost:4000/api/issues
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc1MDUyMjUxOSwiZXhwIjoxNzUwNjk1MzE5fQ.Mjap5vDURQAZxpYjD0K1a3-OK7K58gVlUojM5hJMJl8
+
+{
+  "type": "technical",
+  "title": "Video not playing on mobile devices",
+  "description": "The embedded video player doesn't work on iOS Safari browsers.",
+  "status": "open",
+  "page_link": "https://learning.ccbp.in/course?c_id=62e43c70-ee74-4afe-8d1c-26ca9c22947a&t_id=556f8d68-999b-4d83-9d85-df5c1e343b15&s_id=061be351-e352-4755-8bad-5d36adc1c17d",
+  "category": "video_player",
+  "subject": "Programming",
+  "issue_type": "bug",
+  "student_id": "STU002",
+  "student_name": "Jane Smith",
+  "media": [
+    "https://res.cloudinary.com/davv8r8v4/image/upload/v1750530592/nfexqum82djtjzx0eiu2.png"
+  ]
+}
+
+### Create General Issue
+POST http://localhost:4000/api/issues
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc1MDUyMjUxOSwiZXhwIjoxNzUwNjk1MzE5fQ.Mjap5vDURQAZxpYjD0K1a3-OK7K58gVlUojM5hJMJl8
+
+{
+  "type": "general",
+  "title": "Need clarification on assignment deadline",
+  "description": "The assignment deadline mentioned in the email conflicts with what's shown on the dashboard.",
+  "status": "open",
+  "page_link": "https://learning.ccbp.in/course?c_id=62e43c70-ee74-4afe-8d1c-26ca9c22947a&t_id=556f8d68-999b-4d83-9d85-df5c1e343b15&s_id=061be351-e352-4755-8bad-5d36adc1c17d",
+  "category": "scheduling",
+  "subject": "General",
+  "issue_type": "clarification",
+  "student_id": "STU003",
+  "student_name": "Mike Johnson",
+  "media": []
+}
+
+### Get All Issues
+GET http://localhost:4000/api/issues
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc1MDUyMjUxOSwiZXhwIjoxNzUwNjk1MzE5fQ.Mjap5vDURQAZxpYjD0K1a3-OK7K58gVlUojM5hJMJl8
+
+### Get Specific Issue
+GET http://localhost:4000/api/issues/5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc1MDUyMjUxOSwiZXhwIjoxNzUwNjk1MzE5fQ.Mjap5vDURQAZxpYjD0K1a3-OK7K58gVlUojM5hJMJl8
+
+### Update Issue Status
+PATCH http://localhost:4000/api/issues/5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc1MDUyMjUxOSwiZXhwIjoxNzUwNjk1MzE5fQ.Mjap5vDURQAZxpYjD0K1a3-OK7K58gVlUojM5hJMJl8
+
+{
+  "status": "in_progress"
+}
+
+### Update Issue Status to Resolved
+PATCH http://localhost:4000/api/issues/5
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJlbWFpbCI6ImNoYXJhbkBueHR3YXZlLmNvLmluIiwicm9sZSI6Im1lbnRvciIsImlhdCI6MTc1MDUyMjUxOSwiZXhwIjoxNzUwNjk1MzE5fQ.Mjap5vDURQAZxpYjD0K1a3-OK7K58gVlUojM5hJMJl8
+
+{
+  "status": "resolved"
+}
+
+### Test without authentication (should fail)
+POST http://localhost:4000/api/issues
+Content-Type: application/json
+
+{
+  "type": "content",
+  "title": "Test without auth",
+  "description": "This should fail",
+  "status": "open",
+  "page_link": "https://example.com/test",
+  "category": "test",
+  "subject": "Test",
+  "issue_type": "test",
+  "student_id": "STU004",
+  "student_name": "Test User"
+}

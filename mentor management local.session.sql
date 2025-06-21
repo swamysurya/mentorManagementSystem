@@ -1,1 +1,1 @@
-SELECT * FROM feedback
+SELECT * FROM issues

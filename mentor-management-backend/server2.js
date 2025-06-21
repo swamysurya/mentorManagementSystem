@@ -5,6 +5,8 @@ import cors from "cors";
 import doubtRoutes from "./src/routes/doubtRoutes.js";
 import optionRoutes from "./src/routes/optionRoutes.js";
 import feedbackRoutes from "./src/routes/feedbackRoutes.js";
+import uploadRoutes from "./src/routes/uploadRoutes.js";
+import issueRoutes from "./src/routes/issueRoutes.js";
 
 const app = express();
 
@@ -27,6 +29,12 @@ app.use("/options/", optionRoutes);
 // routess realted to feedback
 app.use("/feedback/", feedbackRoutes);
 
-app.listen(4000, () => {
-  console.log("Server is running on port 4000");
-});
+// routes relate to uploads
+app.use("/api", uploadRoutes);
+
+app.use("/api", issueRoutes);
+
+app.get("/", (req, res) => res.send("API running"));
+
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
