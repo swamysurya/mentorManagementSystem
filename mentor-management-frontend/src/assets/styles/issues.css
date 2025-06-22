@@ -5,9 +5,10 @@
 }
 
 .issues-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding: 2rem 0;
 }
 
 .issues-header {
@@ -176,6 +177,11 @@
 
 .issues-list-section {
   margin-top: 1.5rem;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
+  padding: 0 2vw;
+  overflow-x: auto;
 }
 .issues-list-filters {
   display: flex;
@@ -202,23 +208,30 @@
 
 .issues-list-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+  gap: 2rem;
+  width: 100%;
+  grid-auto-rows: 1fr;
 }
 .issues-list-card {
-  background: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px #0001;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
   padding: 1.5rem 1.2rem 1.2rem 1.2rem;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
   cursor: pointer;
-  transition: box-shadow 0.18s, background 0.18s;
+  transition: box-shadow 0.18s, background 0.18s, border-color 0.18s;
+  min-height: 320px;
+  height: 100%;
+  flex: 1 1 0;
 }
 .issues-list-card:hover {
-  box-shadow: 0 4px 16px #0002;
-  background: #fff;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.13);
+  background: #f8f9fa;
+  border-color: #bdbdbd;
 }
 .issues-list-card-header {
   display: flex;
@@ -276,7 +289,7 @@
   display: flex;
   gap: 0.7rem;
   align-items: center;
-  margin-top: 0.5rem;
+  margin-top: auto;
 }
 .issues-list-card-actions select {
   padding: 0.3rem 0.7rem;
