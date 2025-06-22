@@ -12,5 +12,10 @@ router.patch(
   authenticateToken,
   IssueController.updateIssueStatus
 );
+router.post(
+  "/issues/:id/media",
+  authenticateToken,
+  IssueController.addMediaToIssue
+);
 
 export default router;

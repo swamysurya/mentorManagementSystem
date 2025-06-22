@@ -10,6 +10,10 @@ import "../assets/styles/issues.css";
 import IssuesList from "../components/IssuesList";
 import api from "../utils/axios";
 import { issueService } from "../services/issueService";
+import {
+  getCategoryOptions,
+  getSubjectOptions,
+} from "../services/optionService";
 
 const ISSUE_TYPES = [
   { key: "content", label: "Content Issues" },
@@ -17,36 +21,7 @@ const ISSUE_TYPES = [
   { key: "general", label: "General Issues" },
 ];
 
-const CONTENT_CATEGORIES = [
-  "Cheatsheet",
-  "Questions",
-  "Video Content",
-  "Classroom Quiz",
-  "Daily Quiz",
-  "MCQs",
-];
-const CONTENT_SUBJECTS = [
-  "React",
-  "Python",
-  "SQL",
-  "JavaScript",
-  "Data Structures",
-  "C++",
-  "Java",
-  "HTML/CSS",
-  "Others",
-];
 const RESOLUTION_STATUSES = ["open", "in_progress", "resolved"];
-
-// Add this function right after RESOLUTION_STATUSES:
-const getStatusDisplayName = (status) => {
-  const statusMap = {
-    open: "Open",
-    in_progress: "In Progress",
-    resolved: "Resolved",
-  };
-  return statusMap[status] || status;
-};
 
 // Mock past issues
 
@@ -93,163 +68,12 @@ function IssueTypeTabs({ selected, onSelect, onAllIssuesClick }) {
   );
 }
 
-function ContentIssueForm({ onSubmit }) {
+function ContentIssueForm({ onSubmit, categories, subjects }) {
   const [form, setForm] = useState({
     pageLink: "",
-    category: "",
-    subject: "",
-    status: RESOLUTION_STATUSES[0],
-    media: [],
-  });
-  const [mediaPreviews, setMediaPreviews] = useState([]);
-  const [error, setError] = useState("");
-  const [uploading, setUploading] = useState(false);
-
-  const handleFileChange = async (e) => {
-    const files = Array.from(e.target.files);
-    if (files.some((f) => f.size > 10 * 1024 * 1024)) {
-      setError("Each file must be less than 10MB.");
-      return;
-    }
-    setUploading(true);
-    setError("");
-    try {
-      const uploadedLinks = [];
-      for (const file of files) {
-        const data = new FormData();
-        data.append("file", file);
-        const res = await api.post("/api/upload-media", data, {
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        if (res.data && res.data.mediaLink) {
-          uploadedLinks.push(res.data.mediaLink);
-        }
-      }
-      setForm((prev) => ({
-        ...prev,
-        media: [...prev.media, ...uploadedLinks],
-      }));
-      setMediaPreviews((prev) => [...prev, ...uploadedLinks]);
-    } catch (err) {
-      setError("Failed to upload media.");
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!form.pageLink || !form.category || !form.subject) {
-      setError("Please fill all required fields.");
-      return;
-    }
-    onSubmit({
-      id: Date.now().toString(),
-      type: "content",
-      title: `${form.category} Issue`,
-      ...form,
-      date: new Date().toISOString().slice(0, 10),
-    });
-    setForm({
-      pageLink: "",
-      category: "",
-      subject: "",
-      status: RESOLUTION_STATUSES[0],
-      media: [],
-    });
-    setMediaPreviews([]);
-    setError("");
-  };
-
-  return (
-    <form className="issues-form" onSubmit={handleSubmit}>
-      <label>Page Link*</label>
-      <input
-        name="pageLink"
-        value={form.pageLink}
-        onChange={handleChange}
-        required
-        type="url"
-      />
-      <label>Issue Category*</label>
-      <select
-        name="category"
-        value={form.category}
-        onChange={handleChange}
-        required
-      >
-        <option value="">Select</option>
-        {CONTENT_CATEGORIES.map((c) => (
-          <option key={c} value={c}>
-            {c}
-          </option>
-        ))}
-      </select>
-      <label>Subject*</label>
-      <select
-        name="subject"
-        value={form.subject}
-        onChange={handleChange}
-        required
-      >
-        <option value="">Select</option>
-        {CONTENT_SUBJECTS.map((s) => (
-          <option key={s} value={s}>
-            {s}
-          </option>
-        ))}
-      </select>
-      <label>Resolution Status</label>
-      <select name="status" value={form.status} onChange={handleChange}>
-        {RESOLUTION_STATUSES.map((s) => (
-          <option key={s} value={s}>
-            {s}
-          </option>
-        ))}
-      </select>
-      <CloudinaryStatusIndicator />
-      <label>Attach Media (images/videos, max 10MB each)</label>
-      <input
-        type="file"
-        multiple
-        accept="image/*,video/*"
-        onChange={handleFileChange}
-      />
-      <div className="issues-media-preview">
-        {mediaPreviews.map((src, i) =>
-          src.match(/\.(jpg|jpeg|png|gif)$/i) ? (
-            <img
-              key={i}
-              src={src}
-              alt="preview"
-              className="issues-media-thumb"
-            />
-          ) : src.match(/\.(mp4|webm|ogg)$/i) ? (
-            <video
-              key={i}
-              src={src}
-              controls
-              className="issues-list-media-video"
-            />
-          ) : null
-        )}
-      </div>
-      {uploading && <div className="issues-uploading">Uploading media...</div>}
-      {error && <div className="issues-error">{error}</div>}
-      <button className="issues-btn" type="submit" disabled={uploading}>
-        Submit
-      </button>
-    </form>
-  );
-}
-
-function TechnicalIssueForm({ onSubmit }) {
-  const [form, setForm] = useState({
-    issueType: "",
+    category_id: "",
+    subject_id: "",
+    title: "",
     description: "",
     status: RESOLUTION_STATUSES[0],
     media: [],
@@ -296,19 +120,202 @@ function TechnicalIssueForm({ onSubmit }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.issueType || !form.description) {
+    if (
+      !form.pageLink ||
+      !form.category_id ||
+      !form.subject_id ||
+      !form.title ||
+      !form.description
+    ) {
       setError("Please fill all required fields.");
       return;
     }
-    onSubmit({
-      id: Date.now().toString(),
-      type: "technical",
-      title: form.issueType,
-      ...form,
-      date: new Date().toISOString().slice(0, 10),
-    });
+    const backendData = {
+      type: "content",
+      issue_title: form.title,
+      description: form.description,
+      status: form.status,
+      page_link: form.pageLink,
+      category_id: form.category_id,
+      subject_id: form.subject_id,
+      student_id: null,
+      student_name: null,
+      media: form.media,
+    };
+    onSubmit(backendData);
     setForm({
-      issueType: "",
+      pageLink: "",
+      category_id: "",
+      subject_id: "",
+      title: "",
+      description: "",
+      status: RESOLUTION_STATUSES[0],
+      media: [],
+    });
+    setMediaPreviews([]);
+    setError("");
+  };
+  // console.log(form);
+
+  return (
+    <form className="issues-form" onSubmit={handleSubmit}>
+      <label>Page Link*</label>
+      <input
+        name="pageLink"
+        value={form.pageLink}
+        onChange={handleChange}
+        required
+        type="url"
+      />
+      <label>Issue Category*</label>
+      <select
+        name="category_id"
+        value={form.category_id}
+        onChange={handleChange}
+        required
+      >
+        <option value="">Select</option>
+        {categories.map((c) => (
+          <option key={c.category_id} value={c.category_id}>
+            {c.category_name}
+          </option>
+        ))}
+      </select>
+      <label>Subject*</label>
+      <select
+        name="subject_id"
+        value={form.subject_id}
+        onChange={handleChange}
+        required
+      >
+        <option value="">Select</option>
+        {subjects.map((s) => (
+          <option key={s.subject_id} value={s.subject_id}>
+            {s.subject_name}
+          </option>
+        ))}
+      </select>
+      <label>Issue Title*</label>
+      <input name="title" value={form.title} onChange={handleChange} required />
+      <label>Issue Description*</label>
+      <textarea
+        name="description"
+        value={form.description}
+        onChange={handleChange}
+        required
+      />
+      <label>Resolution Status</label>
+      <select name="status" value={form.status} onChange={handleChange}>
+        {RESOLUTION_STATUSES.map((s) => (
+          <option key={s} value={s}>
+            {s}
+          </option>
+        ))}
+      </select>
+      <CloudinaryStatusIndicator />
+      <label>Attach Media (images/videos, max 10MB each)</label>
+      <input
+        type="file"
+        multiple
+        accept="image/*,video/*"
+        onChange={handleFileChange}
+      />
+      <div className="issues-media-preview">
+        {mediaPreviews.map((src, i) =>
+          src.match(/\.(jpg|jpeg|png|gif)$/i) ? (
+            <img
+              key={i}
+              src={src}
+              alt="preview"
+              className="issues-media-thumb"
+            />
+          ) : src.match(/\.(mp4|webm|ogg)$/i) ? (
+            <video
+              key={i}
+              src={src}
+              controls
+              className="issues-list-media-video"
+            />
+          ) : null
+        )}
+      </div>
+      {uploading && <div className="issues-uploading">Uploading media...</div>}
+      {error && <div className="issues-error">{error}</div>}
+      <button className="issues-btn" type="submit" disabled={uploading}>
+        Submit
+      </button>
+    </form>
+  );
+}
+
+function TechnicalIssueForm({ onSubmit, categories, subjects }) {
+  const [form, setForm] = useState({
+    issue_title: "",
+    description: "",
+    status: RESOLUTION_STATUSES[0],
+    media: [],
+  });
+  const [mediaPreviews, setMediaPreviews] = useState([]);
+  const [error, setError] = useState("");
+  const [uploading, setUploading] = useState(false);
+
+  const handleFileChange = async (e) => {
+    const files = Array.from(e.target.files);
+    if (files.some((f) => f.size > 10 * 1024 * 1024)) {
+      setError("Each file must be less than 10MB.");
+      return;
+    }
+    setUploading(true);
+    setError("");
+    try {
+      const uploadedLinks = [];
+      for (const file of files) {
+        const data = new FormData();
+        data.append("file", file);
+        const res = await api.post("/api/upload-media", data, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+        if (res.data && res.data.mediaLink) {
+          uploadedLinks.push(res.data.mediaLink);
+        }
+      }
+      setForm((prev) => ({
+        ...prev,
+        media: [...prev.media, ...uploadedLinks],
+      }));
+      setMediaPreviews((prev) => [...prev, ...uploadedLinks]);
+    } catch (err) {
+      setError("Failed to upload media.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!form.issue_title || !form.description) {
+      setError("Please fill all required fields.");
+      return;
+    }
+    const backendData = {
+      type: "technical",
+      issue_title: form.issue_title,
+      description: form.description,
+      status: form.status,
+      page_link: null,
+      category_id: null,
+      subject_id: null,
+      student_id: null,
+      student_name: null,
+      media: form.media,
+    };
+    onSubmit(backendData);
+    setForm({
+      issue_title: "",
       description: "",
       status: RESOLUTION_STATUSES[0],
       media: [],
@@ -319,10 +326,10 @@ function TechnicalIssueForm({ onSubmit }) {
 
   return (
     <form className="issues-form" onSubmit={handleSubmit}>
-      <label>Issue Type*</label>
+      <label>Issue Title*</label>
       <input
-        name="issueType"
-        value={form.issueType}
+        name="issue_title"
+        value={form.issue_title}
         onChange={handleChange}
         required
       />
@@ -377,7 +384,7 @@ function TechnicalIssueForm({ onSubmit }) {
   );
 }
 
-function GeneralIssueForm({ onSubmit }) {
+function GeneralIssueForm({ onSubmit, categories, subjects }) {
   const [form, setForm] = useState({
     studentId: "",
     studentName: "",
@@ -437,12 +444,19 @@ function GeneralIssueForm({ onSubmit }) {
       setError("Please fill all required fields.");
       return;
     }
-    onSubmit({
-      id: Date.now().toString(),
+    const backendData = {
       type: "general",
-      ...form,
-      date: new Date().toISOString().slice(0, 10),
-    });
+      issue_title: form.title,
+      description: form.description,
+      status: form.status,
+      page_link: null,
+      category_id: null,
+      subject_id: null,
+      student_id: form.studentId,
+      student_name: form.studentName,
+      media: form.media,
+    };
+    onSubmit(backendData);
     setForm({
       studentId: "",
       studentName: "",
@@ -573,53 +587,58 @@ function CloudinaryStatusIndicator() {
 export default function IssuesPage() {
   const [tab, setTab] = useState("content");
   const [issues, setIssues] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [subjects, setSubjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showAllIssuesView, setShowAllIssuesView] = useState(false);
   const allIssuesRef = useRef(null);
+  const [issueType, setIssueType] = useState("content");
 
   useEffect(() => {
-    fetchIssues();
+    fetchAllData();
   }, []);
 
-  const fetchIssues = async () => {
+  const fetchAllData = async () => {
     try {
       setLoading(true);
-      const data = await issueService.getAllIssues();
-      setIssues(data);
+      const [issuesRes, categoriesRes, subjectsRes] = await Promise.all([
+        issueService.getAllIssues(),
+        getCategoryOptions(),
+        getSubjectOptions(),
+      ]);
+      setIssues(issuesRes);
+      setCategories(categoriesRes.data || []);
+      setSubjects(subjectsRes.data || []);
     } catch (err) {
-      setError("Failed to fetch issues");
-      console.error("Error fetching issues:", err);
+      setError("Failed to fetch issues or options");
+      console.error("Error fetching issues/options:", err);
     } finally {
       setLoading(false);
     }
   };
+  console.log(issues);
 
   const handleAddIssue = async (issueData) => {
     try {
-      // Transform the form data to match backend schema
       const backendData = {
-        type: issueData.type,
-        title: issueData.title,
-        description: issueData.description || `${issueData.type} issue`,
-        status: "open",
-        page_link: issueData.pageLink,
-        category: issueData.category || issueData.issueType || "general",
-        subject: issueData.subject || "General",
-        issue_type: issueData.issueType || "general",
-        student_id: issueData.studentId || "",
-        student_name: issueData.studentName || "",
-        media: issueData.media || [],
+        type: null,
+        issue_title: null,
+        description: null,
+        status: null,
+        page_link: null,
+        category_id: null,
+        subject_id: null,
+        student_id: null,
+        student_name: null,
+        media: [],
+        ...issueData,
       };
-
       const newIssue = await issueService.createIssue(backendData);
       setIssues((prev) => [newIssue, ...prev]);
-
-      // Show success message or toast
       console.log("Issue created successfully:", newIssue);
     } catch (err) {
       console.error("Error creating issue:", err);
-      // Show error message to user
     }
   };
 
@@ -688,7 +707,7 @@ export default function IssuesPage() {
         <Navbar />
         <div className="issues-content">
           <div>Error: {error}</div>
-          <button onClick={fetchIssues}>Retry</button>
+          <button onClick={fetchAllData}>Retry</button>
         </div>
       </div>
     );
@@ -728,11 +747,27 @@ export default function IssuesPage() {
             onSelect={setTab}
             onAllIssuesClick={handleAllIssuesClick}
           />
-          {tab === "content" && <ContentIssueForm onSubmit={handleAddIssue} />}
-          {tab === "technical" && (
-            <TechnicalIssueForm onSubmit={handleAddIssue} />
+          {tab === "content" && (
+            <ContentIssueForm
+              onSubmit={handleAddIssue}
+              categories={categories}
+              subjects={subjects}
+            />
           )}
-          {tab === "general" && <GeneralIssueForm onSubmit={handleAddIssue} />}
+          {tab === "technical" && (
+            <TechnicalIssueForm
+              onSubmit={handleAddIssue}
+              categories={categories}
+              subjects={subjects}
+            />
+          )}
+          {tab === "general" && (
+            <GeneralIssueForm
+              onSubmit={handleAddIssue}
+              categories={categories}
+              subjects={subjects}
+            />
+          )}
           <div className="issues-past-section" ref={allIssuesRef}>
             <h3>All Reported Issues</h3>
             <IssuesList

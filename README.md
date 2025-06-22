@@ -382,25 +382,215 @@ This project is licensed under the MIT License.
 - For production deployment, make sure to change the JWT_SECRET to a secure value
 - Update the database credentials in the `.env` file according to your PostgreSQL setup
 
-CREATE TABLE issues (
-id SERIAL PRIMARY KEY,
-type VARCHAR(20) NOT NULL, -- 'content', 'technical', 'general'
-title VARCHAR(255) NOT NULL,
-description TEXT,
-status VARCHAR(30) NOT NULL, -- 'In Progress', 'Resolved', 'Not Completed'
-date_submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-page_link TEXT, -- (Content only)
-category VARCHAR(100), -- (Content only)
-subject VARCHAR(100), -- (Content only)
-issue_type VARCHAR(100), -- (Technical only)
-student_id VARCHAR(50), -- (General only)
-student_name VARCHAR(100), -- (General only)
-reported_by INTEGER REFERENCES users_profile(id) -- Who reported
-);
+## Database Tables
 
-CREATE TABLE issue_media (
-id SERIAL PRIMARY KEY,
-issue_id INTEGER REFERENCES issues(id) ON DELETE CASCADE,
-media_link TEXT NOT NULL,
-media_type VARCHAR(20) -- 'image', 'video', etc. (optional)
+### Core Tables
+
+#### 1. **users_profile**
+
+```sql
+CREATE TABLE users_profile (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) NOT NULL,
+    first_name VARCHAR(100),
+    last_name VARCHAR(100),
+    phone_number VARCHAR(20),
+    profile_picture TEXT,
+    is_active BOOLEAN DEFAULT true,
+    last_login TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+```
+
+#### 2. **section_options**
+
+```sql
+CREATE TABLE section_options (
+    section_id SERIAL PRIMARY KEY,
+    section_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 3. **subject_options**
+
+```sql
+CREATE TABLE subject_options (
+    subject_id SERIAL PRIMARY KEY,
+    subject_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Feedback System Tables
+
+#### 4. **feedback**
+
+```sql
+CREATE TABLE feedback (
+    feedback_id SERIAL PRIMARY KEY,
+    mentor_id INTEGER REFERENCES users_profile(id),
+    section_id INTEGER REFERENCES section_options(section_id),
+    date DATE NOT NULL,
+    student_engagement INTEGER CHECK (student_engagement BETWEEN 1 AND 5),
+    overall_performance INTEGER CHECK (overall_performance BETWEEN 1 AND 5),
+    concern_status VARCHAR(50) NOT NULL,
+    positive_notes TEXT,
+    suggestions TEXT,
+    additional_feedback TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Doubts Management Tables
+
+#### 5. **student_doubts**
+
+```sql
+CREATE TABLE student_doubts (
+    doubt_id SERIAL PRIMARY KEY,
+    description TEXT NOT NULL,
+    section_id INTEGER REFERENCES section_options(section_id),
+    subject_id INTEGER REFERENCES subject_options(subject_id),
+    resolution_status VARCHAR(50) NOT NULL,
+    mentor_id INTEGER REFERENCES users_profile(id),
+    date DATE DEFAULT CURRENT_DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+### Issues Management Tables
+
+#### 6. **issues**
+
+```sql
+CREATE TABLE issues (
+    id SERIAL PRIMARY KEY,
+    type VARCHAR(50) NOT NULL CHECK (type IN ('content', 'technical', 'general')),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    status VARCHAR(50) NOT NULL DEFAULT 'open' CHECK (status IN ('open', 'in_progress', 'resolved')),
+    page_link TEXT,
+    category_id INTEGER NOT NULL REFERENCES category_options(category_id),
+    subject_id INTEGER NOT NULL REFERENCES subject_options(subject_id),
+    issue_type VARCHAR(50),
+    student_id VARCHAR(50),
+    student_name VARCHAR(100),
+    reported_by INTEGER NOT NULL REFERENCES users_profile(id),
+    date_submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 7. **issue_media**
+
+```sql
+CREATE TABLE issue_media (
+    id SERIAL PRIMARY KEY,
+    issue_id INTEGER NOT NULL REFERENCES issues(id) ON DELETE CASCADE,
+    media_link TEXT NOT NULL,
+    media_type VARCHAR(20) NOT NULL CHECK (media_type IN ('image', 'video', 'other')),
+    uploaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 8. **issue_options**
+
+```sql
+CREATE TABLE issue_options (
+    id SERIAL PRIMARY KEY,
+    option_type VARCHAR(50) NOT NULL CHECK (option_type IN ('category', 'type', 'status')),
+    option_value VARCHAR(100) NOT NULL,
+    display_name VARCHAR(100) NOT NULL,
+    is_active BOOLEAN DEFAULT true,
+    sort_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(option_type, option_value)
+);
+```
+
+### Database Indexes
+
+```sql
+-- Performance indexes
+CREATE INDEX idx_issues_reported_by ON issues(reported_by);
+CREATE INDEX idx_issues_status ON issues(status);
+CREATE INDEX idx_issues_type ON issues(type);
+CREATE INDEX idx_issues_date_submitted ON issues(date_submitted);
+CREATE INDEX idx_issue_media_issue_id ON issue_media(issue_id);
+CREATE INDEX idx_issue_options_type ON issue_options(option_type);
+CREATE INDEX idx_issue_options_active ON issue_options(is_active);
+CREATE INDEX idx_feedback_mentor_date ON feedback(mentor_id, date);
+CREATE INDEX idx_doubts_mentor_date ON student_doubts(mentor_id, date);
+```
+
+### Triggers
+
+```sql
+-- Function to update the updated_at timestamp
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+    NEW.updated_at = CURRENT_TIMESTAMP;
+    RETURN NEW;
+END;
+$$ language 'plpgsql';
+
+-- Triggers for updated_at columns
+CREATE TRIGGER update_issues_updated_at
+    BEFORE UPDATE ON issues
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+CREATE TRIGGER update_issue_options_updated_at
+    BEFORE UPDATE ON issue_options
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+```
+
+### Sample Data for Issues System
+
+```sql
+-- Insert issue categories
+INSERT INTO issue_options (option_type, option_value, display_name, sort_order) VALUES
+('category', 'cheatsheet', 'Cheatsheet', 1),
+('category', 'questions', 'Questions', 2),
+('category', 'video_content', 'Video Content', 3),
+('category', 'classroom_quiz', 'Classroom Quiz', 4),
+('category', 'daily_quiz', 'Daily Quiz', 5),
+('category', 'mcqs', 'MCQs', 6),
+('category', 'docker', 'Docker', 7),
+('category', 'database', 'Database', 8),
+('category', 'api', 'API', 9),
+('category', 'authentication', 'Authentication', 10),
+('category', 'deployment', 'Deployment', 11),
+('category', 'other', 'Other', 12);
+
+-- Insert issue types
+INSERT INTO issue_options (option_type, option_value, display_name, sort_order) VALUES
+('type', 'error', 'Error', 1),
+('type', 'bug', 'Bug', 2),
+('type', 'clarification', 'Clarification', 3),
+('type', 'feature_request', 'Feature Request', 4),
+('type', 'improvement', 'Improvement', 5),
+('type', 'other', 'Other', 6);
+
+-- Insert statuses
+INSERT INTO issue_options (option_type, option_value, display_name, sort_order) VALUES
+('status', 'open', 'Open', 1),
+('status', 'in_progress', 'In Progress', 2),
+('status', 'resolved', 'Resolved', 3);
+```
+
+## Table Relationships
+
+- `users_profile` → `issues` (reported_by)
+- `users_profile` → `feedback` (mentor_id)
+- `users_profile` → `student_doubts` (mentor_id)
+- `section_options` → `feedback` (section_id)
+- `section_options` → `student_doubts` (section_id)
+- `subject_options` → `student_doubts` (subject_id)
+- `issues` → `issue_media` (issue_id) - CASCADE DELETE

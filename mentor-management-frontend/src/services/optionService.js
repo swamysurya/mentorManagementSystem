@@ -17,3 +17,12 @@ export const getSubjectOptions = async () => {
     throw error.response?.data || error.message;
   }
 };
+
+export const getCategoryOptions = async () => {
+  try {
+    const response = await api.get("/options/categories");
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || error.message;
+  }
+};

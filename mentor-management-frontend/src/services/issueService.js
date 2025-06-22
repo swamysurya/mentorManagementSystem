@@ -3,6 +3,7 @@ import api from "../utils/axios";
 export const issueService = {
   // Create a new issue
   createIssue: async (issueData) => {
+    console.log(issueData);
     try {
       const response = await api.post("/api/issues", issueData);
       return response.data;

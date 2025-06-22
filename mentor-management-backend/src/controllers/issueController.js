@@ -3,44 +3,57 @@ import * as MediaModel from "../models/issueMediaModel.js";
 
 export const createIssue = async (req, res) => {
   try {
-    const { media, ...issueFields } = req.body;
-    const reported_by = req.user.userId; // from auth middleware
-    const issue = await IssueModel.createIssue({ ...issueFields, reported_by });
-    if (media && media.length > 0) {
-      await MediaModel.addMediaLinks(issue.id, media);
+    const {
+      type,
+      issue_title,
+      description,
+      status,
+      page_link,
+      category_id,
+      subject_id,
+      student_id,
+      student_name,
+      media,
+    } = req.body;
+    const issueData = {
+      type,
+      issue_title,
+      description,
+      status,
+      page_link: page_link || null,
+      category_id: category_id ? Number(category_id) : null,
+      subject_id: subject_id ? Number(subject_id) : null,
+      student_id: student_id || null,
+      student_name: student_name || null,
+      reported_by: req.user.userId,
+    };
+    const newIssue = await IssueModel.createIssue(issueData);
+    if (media && Array.isArray(media) && media.length > 0) {
+      await MediaModel.addMediaLinks(newIssue.id, media);
     }
-    const mediaLinks = await MediaModel.getMediaByIssueId(issue.id);
-    res
-      .status(201)
-      .json({ ...issue, media: mediaLinks.map((m) => m.media_link) });
+    const issueWithMedia = await IssueModel.getIssueByIdWithMedia(newIssue.id);
+    res.status(201).json(issueWithMedia);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Failed to create issue" });
   }
 };
 
 export const getAllIssues = async (req, res) => {
   try {
-    const issues = await IssueModel.getAllIssues();
-    const issuesWithMedia = await Promise.all(
-      issues.map(async (issue) => {
-        const media = await MediaModel.getMediaByIssueId(issue.id);
-        return { ...issue, media: media.map((m) => m.media_link) };
-      })
-    );
-    res.json(issuesWithMedia);
+    const issues = await IssueModel.getAllIssuesWithMedia();
+    res.json(issues);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Failed to fetch issues" });
   }
 };
 
 export const getIssueById = async (req, res) => {
   try {
-    const issue = await IssueModel.getIssueById(req.params.id);
+    const issue = await IssueModel.getIssueByIdWithMedia(req.params.id);
     if (!issue) return res.status(404).json({ error: "Issue not found" });
-    const media = await MediaModel.getMediaByIssueId(issue.id);
-    res.json({ ...issue, media: media.map((m) => m.media_link) });
+    res.json(issue);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: "Failed to fetch issue" });
   }
 };
 
@@ -51,5 +64,20 @@ export const updateIssueStatus = async (req, res) => {
     res.json(updated);
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+};
+
+export const addMediaToIssue = async (req, res) => {
+  try {
+    const { media } = req.body;
+    const { id } = req.params;
+    if (!media || !Array.isArray(media) || media.length === 0) {
+      return res.status(400).json({ error: "No media provided" });
+    }
+    await MediaModel.addMediaLinks(id, media);
+    const issueWithMedia = await IssueModel.getIssueByIdWithMedia(id);
+    res.json(issueWithMedia);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to add media" });
   }
 };

@@ -2,6 +2,7 @@ import express from "express";
 import {
   getSectionOptions,
   getSubjectOptions,
+  getCategoryOptions,
 } from "../controllers/optionController.js";
 import { authenticateToken } from "../middleware/auth.js";
 
@@ -14,5 +15,6 @@ router.use(authenticateToken);
 
 router.get("/sections", getSectionOptions);
 router.get("/subjects", getSubjectOptions);
+router.get("/categories", getCategoryOptions);
 
 export default router;

@@ -91,10 +91,10 @@ export default function IssuesList({ issues, onIssueClick, onStatusChange }) {
 
 function IssueCard({ issue, onClick, onStatusChange, getStatusDisplayName }) {
   return (
-    <div className="issues-list-card">
+    <div className="issues-list-card" onClick={onClick}>
       <div className="issues-list-card-header">
         <span
-          className={`issues-list-status-badge issues-list-status-${issue.status.replace(
+          className={`issues-list-status-badge issues-list-status-${issue.status?.replace(
             "_",
             ""
           )}`}
@@ -102,65 +102,179 @@ function IssueCard({ issue, onClick, onStatusChange, getStatusDisplayName }) {
           {getStatusDisplayName(issue.status)}
         </span>
         <span className="issues-list-type-badge">
-          {issue.type.charAt(0).toUpperCase() + issue.type.slice(1)}
+          {issue.type?.charAt(0).toUpperCase() + issue.type?.slice(1)}
         </span>
       </div>
-      <div className="issues-list-card-title">
-        {issue.title || issue.subject}
-      </div>
-      {issue.pageLink && (
-        <div className="issues-list-card-link">
-          <a href={issue.pageLink} target="_blank" rel="noopener noreferrer">
-            Page Link
-          </a>
-        </div>
-      )}
+      <div className="issues-list-card-title">{issue.issue_title}</div>
       <div className="issues-list-card-desc">{issue.description}</div>
-      {issue.media && issue.media.length > 0 && (
-        <div className="issues-list-media-preview">
-          {issue.media.map((file, idx) => {
-            if (
-              typeof file === "string" &&
-              file.match(/\.(jpg|jpeg|png|gif)$/i)
-            ) {
-              return (
-                <a
-                  key={idx}
-                  href={file}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="issues-list-media-link"
-                >
-                  <span role="img" aria-label="image">
-                    🖼️
-                  </span>{" "}
-                  Image
-                </a>
-              );
-            } else if (
-              typeof file === "string" &&
-              file.match(/\.(mp4|webm|ogg)$/i)
-            ) {
-              return (
-                <a
-                  key={idx}
-                  href={file}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="issues-list-media-link"
-                >
-                  <span role="img" aria-label="video">
-                    🎬
-                  </span>{" "}
-                  Video
-                </a>
-              );
-            } else {
-              return null;
-            }
-          })}
-        </div>
+
+      {/* Content Issue Fields */}
+      {issue.type === "content" && (
+        <>
+          {issue.page_link && (
+            <div className="issues-list-card-link">
+              <a
+                href={issue.page_link}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span role="img" aria-label="link">
+                  🔗
+                </span>{" "}
+                Page Link
+              </a>
+            </div>
+          )}
+        </>
       )}
+
+      {/* General Issue Fields */}
+      {issue.type === "general" && (
+        <>
+          <div>
+            <strong>Student ID:</strong> {issue.student_id}
+          </div>
+          <div>
+            <strong>Student Name:</strong> {issue.student_name}
+          </div>
+        </>
+      )}
+
+      {/* Media */}
+      {issue.media &&
+        issue.media.length > 0 &&
+        (() => {
+          // Separate images and videos
+          const images = issue.media.filter((mediaUrl) => {
+            if (typeof mediaUrl === "object" && mediaUrl.media_link)
+              mediaUrl = mediaUrl.media_link;
+            return mediaUrl.match(/\.(jpg|jpeg|png|gif)$/i);
+          });
+          const videos = issue.media.filter((mediaUrl) => {
+            if (typeof mediaUrl === "object" && mediaUrl.media_link)
+              mediaUrl = mediaUrl.media_link;
+            return mediaUrl.match(/\.(mp4|webm|ogg)$/i);
+          });
+          const files = issue.media.filter((mediaUrl) => {
+            if (typeof mediaUrl === "object" && mediaUrl.media_link)
+              mediaUrl = mediaUrl.media_link;
+            return !mediaUrl.match(/\.(jpg|jpeg|png|gif|mp4|webm|ogg)$/i);
+          });
+
+          return (
+            <div
+              className="issue-media-row"
+              style={{ display: "flex", gap: 24 }}
+            >
+              {/* Images Column */}
+              {images.length > 0 && (
+                <div className="media-col">
+                  <div style={{ fontWeight: "bold", marginBottom: 4 }}>
+                    Images
+                  </div>
+                  {images.map((mediaUrl, idx) => {
+                    if (typeof mediaUrl === "object" && mediaUrl.media_link)
+                      mediaUrl = mediaUrl.media_link;
+                    return (
+                      <div key={idx} style={{ marginBottom: 4 }}>
+                        <a
+                          href={mediaUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="media-link"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span
+                            role="img"
+                            aria-label="image"
+                            style={{ fontSize: 20, marginRight: 4 }}
+                          >
+                            🖼️
+                          </span>
+                          View Image
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {/* Videos Column */}
+              {videos.length > 0 && (
+                <div className="media-col">
+                  <div style={{ fontWeight: "bold", marginBottom: 4 }}>
+                    Videos
+                  </div>
+                  {videos.map((mediaUrl, idx) => {
+                    if (typeof mediaUrl === "object" && mediaUrl.media_link)
+                      mediaUrl = mediaUrl.media_link;
+                    return (
+                      <div key={idx} style={{ marginBottom: 4 }}>
+                        <a
+                          href={mediaUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="media-link"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span
+                            role="img"
+                            aria-label="video"
+                            style={{ fontSize: 20, marginRight: 4 }}
+                          >
+                            🎬
+                          </span>
+                          View Video
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {/* Other Files Column (optional) */}
+              {files.length > 0 && (
+                <div className="media-col">
+                  <div style={{ fontWeight: "bold", marginBottom: 4 }}>
+                    Files
+                  </div>
+                  {files.map((mediaUrl, idx) => {
+                    if (typeof mediaUrl === "object" && mediaUrl.media_link)
+                      mediaUrl = mediaUrl.media_link;
+                    return (
+                      <div key={idx} style={{ marginBottom: 4 }}>
+                        <a
+                          href={mediaUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="media-link"
+                          style={{
+                            display: "inline-flex",
+                            alignItems: "center",
+                          }}
+                        >
+                          <span
+                            role="img"
+                            aria-label="file"
+                            style={{ fontSize: 20, marginRight: 4 }}
+                          >
+                            📎
+                          </span>
+                          View File
+                        </a>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
       <div className="issues-list-card-actions">
         <select
           value={issue.status}
