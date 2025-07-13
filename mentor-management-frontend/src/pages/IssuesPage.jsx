@@ -125,11 +125,18 @@ export default function IssuesPage() {
         media: [],
         ...issueData,
       };
-      const newIssue = await issueService.createIssue(backendData);
-      setIssues((prev) => [newIssue, ...prev]);
-      console.log("Issue created successfully:", newIssue);
+
+      // Create the new issue
+      await issueService.createIssue(backendData);
+
+      // Refresh the issues list to get the latest data from the server
+      const updatedIssues = await issueService.getAllIssues();
+      setIssues(updatedIssues);
+
+      console.log("Issue created and list refreshed successfully");
     } catch (err) {
       console.error("Error creating issue:", err);
+      // Optionally, you could add error state handling here
     }
   };
 

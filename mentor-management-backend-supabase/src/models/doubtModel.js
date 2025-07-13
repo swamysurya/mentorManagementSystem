@@ -1,60 +1,86 @@
-import pool from "../config/db.js";
+import supabase from "../config/supabase.js";
 
 class Doubt {
   static async createDoubt(doubtData) {
-    const {
-      description,
-      section_id,
-      subject_id,
-      resolution_status,
-      mentor_id,
-      date,
-    } = doubtData;
+    const { data, error } = await supabase
+      .from("student_doubts")
+      .insert({
+        description: doubtData.description,
+        section_id: doubtData.section_id,
+        subject_id: doubtData.subject_id,
+        resolution_status: doubtData.resolution_status,
+        mentor_id: doubtData.mentor_id,
+        date: doubtData.date,
+      })
+      .select()
+      .single();
 
-    const query = `
-      INSERT INTO student_doubts 
-      (description, section_id, subject_id, resolution_status, mentor_id, date)
-      VALUES ($1, $2, $3, $4, $5, $6)
-      RETURNING *
-    `;
+    if (error) {
+      console.error("Error creating doubt:", error);
+      throw error;
+    }
 
-    const values = [
-      description,
-      section_id,
-      subject_id,
-      resolution_status,
-      mentor_id,
-      date,
-    ];
-
-    const result = await pool.query(query, values);
-    return result.rows[0];
+    return data;
   }
 
   static async deleteDoubt(doubtId, mentorId) {
-    const query = `
-      DELETE FROM student_doubts 
-      WHERE doubt_id = $1 AND mentor_id = $2
-      RETURNING *
-    `;
-    const result = await pool.query(query, [doubtId, mentorId]);
-    return result.rows[0];
+    const { data, error } = await supabase
+      .from("student_doubts")
+      .delete()
+      .eq("doubt_id", doubtId)
+      .eq("mentor_id", mentorId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error deleting doubt:", error);
+      throw error;
+    }
+
+    return data;
   }
 
   static async getDoubtsByMentor(mentorId) {
-    const query = `
-      SELECT 
-        d.*,
-        s.section_name,
-        sub.subject_name
-      FROM student_doubts d
-      JOIN section_options s ON d.section_id = s.section_id
-      JOIN subject_options sub ON d.subject_id = sub.subject_id
-      WHERE d.mentor_id = $1
-      ORDER BY d.date DESC, d.created_at DESC
-    `;
-    const result = await pool.query(query, [mentorId]);
-    return result.rows;
+    // First, get the doubts with section and subject names using multiple queries
+    const { data: doubts, error: doubtsError } = await supabase
+      .from("student_doubts")
+      .select("*")
+      .eq("mentor_id", mentorId)
+      .order("date", { ascending: false });
+
+    if (doubtsError) {
+      console.error("Error fetching doubts:", doubtsError);
+      throw doubtsError;
+    }
+
+    // Get all section and subject options in parallel
+    const [sections, subjects] = await Promise.all([
+      supabase.from("section_options").select("section_id, section_name"),
+      supabase.from("subject_options").select("subject_id, subject_name"),
+    ]);
+
+    if (sections.error || subjects.error) {
+      console.error("Error fetching options:", {
+        sections: sections.error,
+        subjects: subjects.error,
+      });
+      throw new Error("Failed to fetch section or subject options");
+    }
+
+    // Create lookup maps for sections and subjects
+    const sectionMap = new Map(
+      sections.data.map((s) => [s.section_id, s.section_name])
+    );
+    const subjectMap = new Map(
+      subjects.data.map((s) => [s.subject_id, s.subject_name])
+    );
+
+    // Map the doubts with section and subject names
+    return doubts.map((doubt) => ({
+      ...doubt,
+      section_name: sectionMap.get(doubt.section_id) || "Unknown Section",
+      subject_name: subjectMap.get(doubt.subject_id) || "Unknown Subject",
+    }));
   }
 }
 

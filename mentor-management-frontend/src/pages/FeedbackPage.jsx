@@ -34,11 +34,6 @@ const FeedbackPage = () => {
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
-  console.log("feedback history", feedbackHistory);
-  console.log("all feedback dates", allFeedbackDates);
-  console.log("selected date", selectedDate);
-  console.log("section options", sectionOptions);
-
   // Fetch section options when component mounts
   useEffect(() => {
     const fetchSectionOptions = async () => {
@@ -63,13 +58,34 @@ const FeedbackPage = () => {
     const fetchAllFeedbackDates = async () => {
       try {
         const response = await getAllFeedbackDates();
-        // Check if the response has a data property
-        const dates = response.data || response;
-        // Ensure dates is an array and format them consistently
-        const formattedDates = Array.isArray(dates)
-          ? dates.map((date) => format(new Date(date), "yyyy-MM-dd"))
-          : [];
-        setAllFeedbackDates(formattedDates);
+        // Extract dates from the response
+        const dates = response?.data?.data || response?.data || [];
+
+        // Safely format the dates
+        const formattedDates = [];
+        if (Array.isArray(dates)) {
+          dates.forEach((item) => {
+            try {
+              // Check if the item is a date string or an object with a date property
+              const dateString = item.date || item;
+              if (dateString) {
+                const date = new Date(dateString);
+                if (!isNaN(date.getTime())) {
+                  // Check if it's a valid date
+                  formattedDates.push(format(date, "yyyy-MM-dd"));
+                }
+              }
+            } catch (e) {
+              console.warn("Invalid date format:", item, e);
+            }
+          });
+        }
+
+        // Remove duplicates and sort dates
+        const uniqueDates = [...new Set(formattedDates)].sort(
+          (a, b) => new Date(b) - new Date(a)
+        );
+        setAllFeedbackDates(uniqueDates);
       } catch (err) {
         console.error("Error fetching all feedback dates:", err);
         setAllFeedbackDates([]); // Set empty array on error
