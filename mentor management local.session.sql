@@ -1,1 +1,1 @@
-SELECT * from section_options
+SELECT * from feedback;

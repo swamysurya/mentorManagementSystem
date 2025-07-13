@@ -67,7 +67,7 @@ export const getFeedbackHistory = async (req, res) => {
 export const getAllFeedbackDates = async (req, res) => {
   try {
     const mentor_id = req.user.userId;
-    const dates = await Feedback.getAllFeedbackDates(mentor_id);
+    const dates = await Feedback.getAllFeedback(mentor_id);
 
     res.json({
       status: "success",

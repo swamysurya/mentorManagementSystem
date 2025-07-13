@@ -122,7 +122,7 @@ const FeedbackPage = () => {
 
     try {
       const formattedDate = format(selectedDate, "yyyy-MM-dd");
-
+      console.log("hande", formData);
       const feedbackData = {
         section_id: parseInt(formData.section_id),
         date: formattedDate,
