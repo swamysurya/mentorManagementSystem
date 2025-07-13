@@ -34,6 +34,11 @@ const FeedbackPage = () => {
   const [error, setError] = useState(null);
   const [selectedDate, setSelectedDate] = useState(new Date());
 
+  console.log("feedback history", feedbackHistory);
+  console.log("all feedback dates", allFeedbackDates);
+  console.log("selected date", selectedDate);
+  console.log("section options", sectionOptions);
+
   // Fetch section options when component mounts
   useEffect(() => {
     const fetchSectionOptions = async () => {

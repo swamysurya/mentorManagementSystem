@@ -1,1 +1,1 @@
-SELECT * from issue_media;
+SELECT * from section_options

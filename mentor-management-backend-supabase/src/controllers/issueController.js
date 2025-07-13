@@ -66,6 +66,7 @@ export const getIssueById = async (req, res) => {
 export const updateIssueStatus = async (req, res) => {
   try {
     const { status } = req.body;
+    // console.log("inside update issue status", status);
     const updated = await IssueModel.updateIssueStatus(req.params.id, status);
     res.json(updated);
   } catch (err) {

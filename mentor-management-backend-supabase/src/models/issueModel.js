@@ -112,18 +112,20 @@ export const getIssueById = async (id) => {
  * @param {Object} updates - The fields to update
  * @returns {Promise<Object>} The updated issue
  */
-export const updateIssue = async (id, updates) => {
+export const updateIssueStatus = async (id, updates) => {
+  // console.log("inside update issue status", id, updates);
   try {
     const { data, error } = await supabase
       .from("issues")
       .update({
-        ...updates,
-        updated_at: new Date().toISOString(),
+        status: updates,
+        date_submitted: new Date().toISOString(),
       })
       .eq("id", id)
       .select()
       .single();
-
+    // console.log("updated issue", data);
+    // console.log("error", error);
     if (error) throw error;
     return data;
   } catch (error) {

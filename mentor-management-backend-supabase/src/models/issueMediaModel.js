@@ -30,6 +30,164 @@ export const addMediaLinks = async (issueId, mediaLinks) => {
     throw error;
   }
 };
+/**
+ * Create a new feedback entry
+ * @param {Object} feedbackData - The feedback data to create
+ * @returns {Promise<Object>} The created feedback
+ */
+export const createFeedback = async (feedbackData) => {
+  try {
+    const { data, error } = await supabase
+      .from("feedback")
+      .insert({
+        ...feedbackData,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error creating feedback:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get feedback by ID
+ * @param {string} id - The feedback ID
+ * @returns {Promise<Object>} The feedback data
+ */
+export const getFeedbackById = async (id) => {
+  try {
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("*")
+      .eq("id", id)
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error(`Error fetching feedback ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get all feedback for a mentor
+ * @param {string} mentorId - The mentor's ID
+ * @returns {Promise<Array>} Array of feedback entries
+ */
+export const getFeedbackByMentor = async (mentorId) => {
+  try {
+    const { data, error } = await supabase
+      .from("feedback")
+      .select(
+        `
+          *,
+          sections:section_id (section_name)
+        `
+      )
+      .eq("mentor_id", mentorId)
+      .order("date", { ascending: false });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error(`Error fetching feedback for mentor ${mentorId}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Update feedback
+ * @param {string} id - The feedback ID
+ * @param {Object} updates - The fields to update
+ * @returns {Promise<Object>} The updated feedback
+ */
+export const updateFeedback = async (id, updates) => {
+  try {
+    const { data, error } = await supabase
+      .from("feedback")
+      .update({
+        ...updates,
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id)
+      .select()
+      .single();
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error(`Error updating feedback ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Delete feedback
+ * @param {string} id - The feedback ID to delete
+ * @returns {Promise<Object>} Success message
+ */
+export const deleteFeedback = async (id) => {
+  try {
+    const { error } = await supabase.from("feedback").delete().eq("id", id);
+
+    if (error) throw error;
+    return { success: true, message: "Feedback deleted successfully" };
+  } catch (error) {
+    console.error(`Error deleting feedback ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
+ * Get feedback summary for dashboard
+ * @param {string} mentorId - The mentor's ID
+ * @returns {Promise<Object>} Summary statistics
+ */
+export const getFeedbackSummary = async (mentorId) => {
+  try {
+    const { data, error } = await supabase.rpc("get_feedback_summary", {
+      mentor_id: mentorId,
+    });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching feedback summary:", error);
+    throw error;
+  }
+};
+
+/**
+ * Get feedback by date range
+ * @param {string} mentorId - The mentor's ID
+ * @param {string} startDate - Start date (ISO string)
+ * @param {string} endDate - End date (ISO string)
+ * @returns {Promise<Array>} Filtered feedback entries
+ */
+export const getFeedbackByDateRange = async (mentorId, startDate, endDate) => {
+  try {
+    const { data, error } = await supabase
+      .from("feedback")
+      .select("*")
+      .eq("mentor_id", mentorId)
+      .gte("date", startDate)
+      .lte("date", endDate)
+      .order("date", { ascending: true });
+
+    if (error) throw error;
+    return data;
+  } catch (error) {
+    console.error("Error fetching feedback by date range:", error);
+    throw error;
+  }
+};
 
 /**
  * Get all media for a specific issue
