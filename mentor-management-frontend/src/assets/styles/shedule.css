@@ -90,3 +90,120 @@
     width: 100%;
   }
 }
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.dashboard-card.schedule-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  padding: 32px 28px;
+  max-width: none;
+  width: 90%;
+  margin: 32px auto 0 auto;
+}
+
+.back-button {
+  margin-bottom: 18px;
+}
+.schedule-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+.back-button {
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  color: #1a73e8;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 6px 12px 6px 0;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.back-button:hover {
+  background: #e0e7ff;
+}
+.back-icon {
+  margin-right: 4px;
+  width: 22px;
+  height: 22px;
+  color: #1a73e8;
+  vertical-align: middle;
+}
+.schedule-header-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #222;
+}
+.schedule-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.schedule-section,
+.workflow-section {
+  flex: 1 1 350px;
+  min-width: 320px;
+  max-width: 100%;
+  background: #f9fafb;
+  border-radius: 10px;
+  padding: 24px 18px 18px 18px;
+  margin-bottom: 0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+.coming-soon {
+  color: #888;
+  font-size: 1.1rem;
+  font-style: italic;
+  margin-top: 18px;
+}
+@media (max-width: 900px) {
+  .dashboard-card.schedule-card {
+    padding: 18px 6px;
+  }
+  .schedule-sections {
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+
+.schedule-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.schedule-section .tab-active {
+  background: #3b82f6;
+  color: #fff;
+  border-radius: 6px 6px 0 0;
+  font-weight: 600;
+}
+.schedule-section button {
+  background: #f3f4f6;
+  color: #222;
+  border: none;
+  padding: 8px 18px;
+  margin-right: 6px;
+  border-radius: 6px 6px 0 0;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.schedule-section button:not(.tab-active):hover {
+  background: #e0e7ef;
+}

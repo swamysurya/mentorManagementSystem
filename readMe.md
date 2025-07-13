@@ -141,7 +141,58 @@ Server runs at: http://localhost:4000
   - Returns: User data
   - Handles: Authorization
 
-## 💅 Styling Features
+## � Google Sheets API Setup
+
+To use the Google Sheets integration, you'll need to set up the Google Sheets API and obtain the necessary credentials.
+
+### 1. Get Google Sheet ID
+
+1. Open your Google Sheet
+2. The Sheet ID is the long string in the URL between `/d/ and `/edit`
+   - Example: `https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID/edit#gid=0`
+
+### 2. Enable Google Sheets API
+
+1. Go to [Google Cloud Console](https://console.cloud.google.com/)
+2. Create a new project or select an existing one
+3. Enable the Google Sheets API:
+   - Navigate to "APIs & Services" > "Library"
+   - Search for "Google Sheets API"
+   - Click "Enable"
+
+### 3. Create API Credentials
+
+1. Go to "APIs & Services" > "Credentials"
+2. Click "Create Credentials" > "API key"
+3. Restrict the API key for security:
+   - Click on the created API key
+   - Under "Application restrictions", select "HTTP referrers"
+   - Under "API restrictions", select "Restrict key" and choose "Google Sheets API"
+   - Click "Save"
+
+### 4. Configure Environment Variables
+
+Create a `.env` file in the frontend directory with your credentials:
+
+```env
+REACT_APP_GOOGLE_SHEETS_API_KEY=your_api_key_here
+REACT_APP_GOOGLE_SHEET_ID=your_sheet_id_here
+```
+
+### 5. Share Your Google Sheet
+
+1. Open your Google Sheet
+2. Click "Share" in the top-right corner
+3. Add the email address from your Google Cloud project's service account
+4. Set the permission to "Editor"
+
+### Security Notes
+
+- Never commit your API key to version control
+- Always restrict your API key to specific domains and APIs
+- Regularly rotate your API keys in production
+
+## �💅 Styling Features
 
 - Responsive design
 - Modern UI components
@@ -213,3 +264,10 @@ For support or queries:
 ### Here's a visual representation of how MVC works in our application:
 
 <img src="image.png" width="500" height="500" alt="Description">
+
+nvm install --lts Install latest LTS Node.js
+nvm install node Install latest available Node.js
+nvm use --lts Use latest LTS version
+nvm use node Use latest version
+nvm alias default node Set latest as default
+node -v Check current version

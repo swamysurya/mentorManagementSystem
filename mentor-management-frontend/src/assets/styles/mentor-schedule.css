@@ -1,0 +1,213 @@
+/* MentorSchedule custom styles */
+
+.mentor-schedule-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+.mentor-schedule-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.mentor-schedule-label {
+  font-weight: 500;
+  margin-right: 8px;
+}
+.mentor-schedule-date-input {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 1rem;
+}
+.mentor-schedule-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 8px;
+}
+.mentor-schedule-btn {
+  border: none;
+  border-radius: 6px;
+  padding: 6px 18px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.mentor-schedule-btn-save {
+  background: #4ade80;
+  color: #fff;
+}
+.mentor-schedule-btn-save:hover {
+  background: #22c55e;
+}
+.mentor-schedule-btn-clear {
+  background: #f87171;
+  color: #fff;
+}
+.mentor-schedule-btn-clear:hover {
+  background: #ef4444;
+}
+.mentor-schedule-btn-reset {
+  background: #9ca3af;
+  color: #fff;
+}
+.mentor-schedule-btn-reset:hover {
+  background: #6b7280;
+}
+
+.mentor-list-section {
+  margin-bottom: 24px;
+}
+.mentor-list-title {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.mentor-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+.mentor-list-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: var(--mentor-color, #f3f4f6);
+}
+.mentor-list-status {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 4px;
+  display: inline-block;
+}
+.mentor-list-status-present {
+  background: #22c55e;
+}
+.mentor-list-status-absent {
+  background: #f87171;
+}
+.mentor-list-name {
+  font-weight: 500;
+  font-size: 0.97rem;
+}
+.mentor-list-checkbox {
+  margin-left: auto;
+  accent-color: #22c55e;
+}
+
+.schedule-grid-section {
+  overflow-x: auto;
+  margin-bottom: 24px;
+}
+.schedule-grid-table {
+  min-width: 900px;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+.schedule-grid-th,
+.schedule-grid-td {
+  border: 1px solid #e5e7eb;
+  padding: 6px 8px;
+  text-align: left;
+}
+.schedule-grid-th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+.schedule-grid-row-lunch {
+  background: #fef9c3;
+}
+.schedule-grid-row-practice {
+  background: #dbeafe;
+}
+.schedule-grid-td-time {
+  font-weight: 500;
+}
+.schedule-grid-lunch-label {
+  margin-left: 6px;
+  color: #b45309;
+  font-size: 0.92em;
+}
+.schedule-grid-practice-label {
+  margin-left: 6px;
+  color: #2563eb;
+  font-size: 0.92em;
+}
+.schedule-grid-unavailable {
+  color: #9ca3af;
+}
+.schedule-grid-select {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 2px 6px;
+  font-size: 0.97em;
+}
+
+.mentor-hours-summary-section {
+  margin-bottom: 12px;
+}
+.mentor-hours-summary-title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+.mentor-hours-summary-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 8px;
+}
+.mentor-hours-summary-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: var(--mentor-color, #f3f4f6);
+}
+.mentor-hours-summary-name {
+  font-weight: 500;
+  font-size: 0.97rem;
+}
+.mentor-hours-summary-hours {
+  margin-left: auto;
+  font-size: 0.93rem;
+  font-family: monospace;
+}
+
+.mentor-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: #fff;
+  z-index: 9999;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.mentor-toast-success {
+  background: #22c55e;
+}
+.mentor-toast-error {
+  background: #ef4444;
+}
+.mentor-toast-info {
+  background: #6b7280;
+}
+
+/* Mentor color backgrounds (future: use JS to set --mentor-color per mentor) */
+.mentor-color-bg[data-mentor-id] {
+  /* Default pastel, can be overridden by inline style or JS */
+  background: var(--mentor-color, #f3f4f6);
+}

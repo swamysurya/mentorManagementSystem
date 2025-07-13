@@ -12,7 +12,6 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    // console.log(token);
     return config;
   },
   (error) => {
@@ -28,7 +27,7 @@ api.interceptors.response.use(
       // Token expired or invalid
       Cookies.remove("token", { path: "/" });
       Cookies.remove("role", { path: "/" });
-      window.location.href = "/login";
+      // window.location.href = "/login";
     }
     return Promise.reject(error);
   }

@@ -204,6 +204,8 @@ export default function IssuesPage() {
     );
   }
 
+  // console.log(issues);
+
   return (
     <CloudinaryStatusProvider>
       <div className="issues-container">

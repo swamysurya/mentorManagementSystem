@@ -17,6 +17,7 @@ const getStatusDisplayName = (status) => {
 };
 
 export default function IssuesList({ issues, onIssueClick, onStatusChange }) {
+  // console.log("component issues list", issues);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [typeFilter, setTypeFilter] = useState("all");
@@ -141,21 +142,21 @@ function IssueCard({ issue, onClick, onStatusChange, getStatusDisplayName }) {
       )}
 
       {/* Media */}
-      {issue.media &&
-        issue.media.length > 0 &&
+      {issue.issue_media &&
+        issue.issue_media.length > 0 &&
         (() => {
           // Separate images and videos
-          const images = issue.media.filter((mediaUrl) => {
+          const images = issue.issue_media.filter((mediaUrl) => {
             if (typeof mediaUrl === "object" && mediaUrl.media_link)
               mediaUrl = mediaUrl.media_link;
             return mediaUrl.match(/\.(jpg|jpeg|png|gif)$/i);
           });
-          const videos = issue.media.filter((mediaUrl) => {
+          const videos = issue.issue_media.filter((mediaUrl) => {
             if (typeof mediaUrl === "object" && mediaUrl.media_link)
               mediaUrl = mediaUrl.media_link;
             return mediaUrl.match(/\.(mp4|webm|ogg)$/i);
           });
-          const files = issue.media.filter((mediaUrl) => {
+          const files = issue.issue_media.filter((mediaUrl) => {
             if (typeof mediaUrl === "object" && mediaUrl.media_link)
               mediaUrl = mediaUrl.media_link;
             return !mediaUrl.match(/\.(jpg|jpeg|png|gif|mp4|webm|ogg)$/i);

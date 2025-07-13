@@ -16,7 +16,6 @@ export default function Login() {
   const addMessage = (text, type = "error") => {
     const id = Date.now();
     setMessages((prev) => {
-      // Keep only the last 3 messages
       const newMessages = [...prev, { id, text, type }];
       if (newMessages.length > 3) {
         return newMessages.slice(-3);
@@ -54,17 +53,19 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    // debugger;
+    if (!validateForm()) {
+      return;
+    }
 
     try {
+      setLoading(true);
       const res = await api.post("/auth/login", { email, password });
-
       if (res.data.status === "success") {
         const { token } = res.data.data;
         const { role, first_name, last_name } = res.data.data.user;
         login(token, role, first_name, last_name);
 
-        // Navigate based on role
         if (role === "RP") {
           navigate("/admin");
         } else {

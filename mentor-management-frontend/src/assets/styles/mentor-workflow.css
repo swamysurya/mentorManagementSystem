@@ -1,0 +1,195 @@
+/* MentorWorkflow Component Styles */
+
+.mentor-workflow-container {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+  padding: 24px;
+  margin-bottom: 24px;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.mentor-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+.mentor-tab {
+  background: #f3f4f6;
+  border: none;
+  border-radius: 8px 8px 0 0;
+  padding: 10px 24px 8px 24px;
+  font-weight: 500;
+  font-size: 1rem;
+  color: #334155;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+  position: relative;
+  outline: none;
+}
+.mentor-tab.active {
+  background: #3b82f6;
+  color: #fff;
+  z-index: 2;
+}
+.mentor-tab-desc {
+  font-size: 0.85em;
+  color: #64748b;
+  margin-top: 2px;
+}
+.mentor-tab.active .mentor-tab-desc {
+  color: #dbeafe;
+}
+
+.mentor-date-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+.mentor-label {
+  font-weight: 500;
+  margin-right: 8px;
+}
+.mentor-date-input {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 1rem;
+}
+.mentor-date-info {
+  color: #64748b;
+  font-size: 0.98em;
+}
+
+.mentor-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 18px;
+}
+.mentor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.97rem;
+  background: #f9fafb;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.mentor-th,
+.mentor-td {
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+  text-align: left;
+}
+.mentor-th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+.mentor-td-time {
+  font-weight: 500;
+  min-width: 120px;
+}
+.mentor-tr.editing {
+  background: #e0f2fe;
+}
+.mentor-time-edit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.mentor-time-input {
+  width: 60px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.97em;
+}
+.mentor-activity-input {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.97em;
+}
+.mentor-action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: background 0.2s;
+  color: #64748b;
+}
+.mentor-action-btn:hover {
+  background: #e0e7ef;
+  color: #1e293b;
+}
+.mentor-add-btn {
+  background: #f3f4f6;
+  color: #3b82f6;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 16px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s, color 0.2s;
+}
+.mentor-add-btn:hover {
+  background: #3b82f6;
+  color: #fff;
+}
+.mentor-save-btn {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.2s;
+}
+.mentor-save-btn:hover {
+  background: #16a34a;
+}
+.mentor-delete-btn {
+  background: #f87171;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: background 0.2s;
+}
+.mentor-delete-btn:hover {
+  background: #ef4444;
+}
+
+@media (max-width: 700px) {
+  .mentor-workflow-container {
+    padding: 12px;
+  }
+  .mentor-table {
+    font-size: 0.93rem;
+  }
+}
+@media (max-width: 500px) {
+  .mentor-tabs {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .mentor-date-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

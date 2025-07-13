@@ -7,7 +7,7 @@ import {
   getSubjectOptions,
 } from "../services/optionService";
 
-export default function IssueDetail() {
+export default function IssueDetail(props) {
   const { id } = useParams();
   const navigate = useNavigate();
   const [issue, setIssue] = useState(null);
@@ -128,6 +128,8 @@ export default function IssueDetail() {
     </div>
   );
 
+  console.log("fetched data", issue);
+
   return (
     <div className="issues-container">
       <Navbar />
@@ -196,10 +198,10 @@ export default function IssueDetail() {
               <strong>Student Name:</strong> {issue.student_name}
             </div>
           )}
-          {issue.media && issue.media.length > 0 && (
+          {issue.issue_media && issue.issue_media.length > 0 && (
             <div style={{ marginTop: 12 }}>
               <strong>Media:</strong>
-              {renderMedia(issue.media)}
+              {renderMedia(issue.issue_media)}
             </div>
           )}
         </div>
