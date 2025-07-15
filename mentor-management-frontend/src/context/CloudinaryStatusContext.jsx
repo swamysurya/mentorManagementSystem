@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
-import api from "../utils/axios";
+import api from "../utils/common/axios";
 
 export const CloudinaryStatusContext = createContext(null);
 

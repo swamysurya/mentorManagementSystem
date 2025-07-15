@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
-import api from "../utils/axios";
-import ToastContainer from "../components/ToastContainer";
-import "../assets/styles/login.css";
+import { useAuth } from "../../hooks/common/useAuth";
+import api from "../../utils/common/axios";
+import ToastContainer from "../../components/ToastContainer";
+import "../../assets/styles/login.css";
 
 export default function Login() {
   const [email, setEmail] = useState("");

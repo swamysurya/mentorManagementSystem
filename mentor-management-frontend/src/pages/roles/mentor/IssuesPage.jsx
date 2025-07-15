@@ -5,18 +5,18 @@ import React, {
   createContext,
   useContext,
 } from "react";
-import Navbar from "../components/Navbar";
-import "../assets/styles/issues.css";
-import IssuesList from "../components/IssuesList";
-import { issueService } from "../services/issueService";
+import Navbar from "../../../components/common/Navbar";
+import "../../../assets/styles/issues.css";
+import IssuesList from "../../../components/IssuesList";
+import { issueService } from "../../../services/issueService";
 import {
   getCategoryOptions,
   getSubjectOptions,
-} from "../services/optionService";
-import ContentIssueForm from "../components/ContentIssueForm";
-import TechnicalIssueForm from "../components/TechnicalIssueForm";
-import GeneralIssueForm from "../components/GeneralIssueForm";
-import { CloudinaryStatusProvider } from "../context/CloudinaryStatusContext";
+} from "../../../services/optionService";
+import ContentIssueForm from "../../../components/roles/mentor/ContentIssueForm";
+import TechnicalIssueForm from "../../../components/roles/mentor/TechnicalIssueForm";
+import GeneralIssueForm from "../../../components/roles/mentor/GeneralIssueForm";
+import { CloudinaryStatusProvider } from "../../../context/CloudinaryStatusContext";
 import { useNavigate } from "react-router-dom";
 
 const ISSUE_TYPES = [
@@ -168,18 +168,23 @@ export default function IssuesPage() {
       <div className="issues-container">
         <Navbar />
         <main className="issues-content">
-          <button
-            className="issues-btn issues-btn-outline"
-            style={{ marginBottom: 24 }}
-            onClick={handleCloseAllIssuesView}
-          >
-            &larr; Back
-          </button>
-          <h2 style={{ marginBottom: 16 }}>All Issues Overview</h2>
+          <div className="issues-header">
+            <button
+              className="issues-btn issues-btn-outline"
+              onClick={handleCloseAllIssuesView}
+            >
+              &larr; Back
+            </button>
+            <h2>All Issues Overview</h2>
+          </div>
           <IssuesStats issues={issues} statuses={RESOLUTION_STATUSES} />
           <IssuesList
             issues={issues}
-            onIssueClick={(issue) => navigate(`/issues/${issue.id}`)}
+            onIssueClick={(issue) => {
+              navigate(`/issues/${issue.id}`);
+              // Store selected issue in localStorage for details page
+              localStorage.setItem("selectedIssue", JSON.stringify(issue));
+            }}
             onStatusChange={handleStatusChange}
           />
         </main>

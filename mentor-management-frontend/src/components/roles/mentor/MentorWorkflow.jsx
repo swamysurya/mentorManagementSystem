@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { CalendarIcon, Save, Plus, Trash2 } from "lucide-react";
-import "../assets/styles/mentor-workflow.css";
+import "../../../assets/styles/mentor-workflow.css";
 
 function formatTime(minutes) {
   const hour = Math.floor(minutes / 60);

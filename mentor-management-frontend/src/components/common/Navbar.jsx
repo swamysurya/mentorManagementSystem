@@ -1,5 +1,6 @@
-import { useAuth } from "../hooks/useAuth";
-import "../assets/styles/navbar.css";
+import { useAuth } from "../../hooks/common/useAuth";
+import { Link } from "react-router-dom";
+import "../../assets/styles/navbar.css";
 import Cookies from "js-cookie";
 
 const Navbar = () => {
@@ -26,6 +27,13 @@ const Navbar = () => {
             <span className="profile-role">{role}</span>
           </div>
         </div>
+      </div>
+      <div className="navbar-center">
+        {role === "CDS" && (
+          <Link to="/cds" className="nav-link">
+            Dashboard
+          </Link>
+        )}
       </div>
       <div className="navbar-right">
         <button onClick={logout} className="logout-button">

@@ -1,0 +1,90 @@
+.all-issues-page {
+  min-height: 100vh;
+  background-color: #f8fafc;
+  padding-top: 4rem; /* Add padding to account for fixed navbar */
+}
+
+.all-issues-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+.page-header {
+  margin-bottom: 2rem;
+  position: relative;
+  text-align: center;
+  padding-left: 100px; /* Add padding to prevent overlap with back button */
+  padding-right: 100px; /* Add matching right padding for balance */
+  min-height: 40px; /* Ensure header has enough height */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1a202c;
+  margin: 0;
+  flex: 1; /* Allow the heading to take available space */
+  text-align: center;
+}
+
+.back-button {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: #4a5568;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  transition: background-color 0.2s, color 0.2s;
+  z-index: 1; /* Ensure button stays above other elements */
+}
+
+.back-button:hover {
+  background-color: #edf2f7;
+  color: #2d3748;
+}
+
+.back-button .back-icon {
+  font-size: 0.9em;
+}
+
+.issues-list-container {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 2rem;
+  font-size: 1.1rem;
+  color: #4a5568;
+}
+
+.error-state {
+  color: #e53e3e;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .all-issues-container {
+    padding: 1rem;
+  }
+
+  .page-header h1 {
+    font-size: 1.75rem;
+  }
+}

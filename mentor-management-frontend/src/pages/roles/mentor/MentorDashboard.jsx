@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import "../assets/styles/mentor-dashboard.css";
+import Navbar from "../../../components/common/Navbar";
+import "../../../assets/styles/mentor-dashboard.css";
 
 const MentorDashboard = () => {
   const navigate = useNavigate();

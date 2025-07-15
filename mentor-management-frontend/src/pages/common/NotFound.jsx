@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import '../assets/styles/not-found.css';
+import { Link } from "react-router-dom";
+import "../../assets/styles/not-found.css";
 
 const NotFound = () => {
   return (
@@ -7,7 +7,9 @@ const NotFound = () => {
       <h1>404</h1>
       <h2>Page Not Found</h2>
       <p>The page you're looking for doesn't exist or has been moved.</p>
-      <Link to="/" className="back-home">Back to Home</Link>
+      <Link to="/" className="back-home">
+        Back to Home
+      </Link>
     </div>
   );
 };

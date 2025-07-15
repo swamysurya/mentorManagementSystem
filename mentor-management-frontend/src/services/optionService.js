@@ -1,4 +1,4 @@
-import api from "../utils/axios";
+import api from "../utils/common/axios";
 
 export const getSectionOptions = async () => {
   try {

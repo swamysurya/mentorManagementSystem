@@ -1,6 +1,6 @@
 import { Navigate, useLocation } from "react-router-dom";
 import PropTypes from "prop-types";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/common/useAuth";
 import Cookies from "js-cookie";
 
 export const RouteGuard = ({ children, allowedRole, requireAuth = true }) => {
@@ -12,7 +12,8 @@ export const RouteGuard = ({ children, allowedRole, requireAuth = true }) => {
 
   // Public route and user is authenticated - redirect to dashboard
   if (!requireAuth && isAuthenticated && hasToken) {
-    const redirectPath = user.role === "RP" ? "/admin" : "/mentor";
+    const redirectPath =
+      user.role === "RP" ? "/admin" : user.role === "CDS" ? "/cds" : "/mentor";
     return <Navigate to={redirectPath} replace />;
   }
 
@@ -23,7 +24,8 @@ export const RouteGuard = ({ children, allowedRole, requireAuth = true }) => {
 
   // Protected route and wrong role
   if (requireAuth && allowedRole && user?.role !== allowedRole) {
-    const redirectPath = user.role === "RP" ? "/admin" : "/mentor";
+    const redirectPath =
+      user.role === "RP" ? "/admin" : user.role === "CDS" ? "/cds" : "/mentor";
     return <Navigate to={redirectPath} replace />;
   }
 

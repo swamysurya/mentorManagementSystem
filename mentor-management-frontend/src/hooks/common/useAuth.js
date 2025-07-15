@@ -1,6 +1,6 @@
 import { useContext, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext";
+import { AuthContext } from "../../context/AuthContext";
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -15,7 +15,8 @@ export const useAuth = () => {
     async (token, role, firstName, lastName) => {
       context.login(token, role, firstName, lastName);
       const from = location.state?.from?.pathname;
-      const defaultPath = role === "RP" ? "/admin" : "/mentor";
+      const defaultPath =
+        role === "RP" ? "/admin" : role === "CDS" ? "/cds" : "/mentor";
       navigate(from || defaultPath, { replace: true });
     },
     [context.login, navigate, location]

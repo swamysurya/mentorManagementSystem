@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../assets/styles/advanced-mentor-table.css";
+import "../../../assets/styles/advanced-mentor-table.css";
 
 const SHEET_ID = "1mYxvdJm6ocCCjMW7_sXHutArpWSqd_WkblMAJ5Uc2zM"; // <-- Replace with your actual Sheet ID
 const API_KEY = "AIzaSyD9HoKwiD-PwEHuCxpI-Z8_HE3dAw1vG7A"; // <-- Replace with your actual API Key

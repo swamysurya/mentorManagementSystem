@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import api from "../utils/axios";
+import Navbar from "../../../components/common/Navbar";
+
 import {
   getCategoryOptions,
   getSubjectOptions,
-} from "../services/optionService";
+} from "../../../services/optionService";
 
 export default function IssueDetail(props) {
   const { id } = useParams();

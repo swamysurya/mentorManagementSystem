@@ -139,6 +139,53 @@ class Feedback {
   }
 
   /**
+   * Get all feedback for a specific mentor
+   * @param {string} mentorId - The ID of the mentor
+   * @param {Object} options - Additional options (startDate, endDate, limit)
+   * @returns {Promise<Array>} Array of feedback records
+   */
+  static async getFeedbackByMentorId(mentorId, options = {}) {
+    try {
+      if (!mentorId) {
+        throw new Error("Mentor ID is required");
+      }
+
+      let query = supabase
+        .from("feedback")
+        .select(
+          `
+          *,
+          section_options:section_id (
+            section_name
+          )
+        `
+        )
+        .eq("mentor_id", mentorId)
+        .order("date", { ascending: false });
+
+      // Apply date range filter if provided
+      if (options.startDate && options.endDate) {
+        query = query
+          .gte("date", options.startDate)
+          .lte("date", options.endDate);
+      }
+
+      // Apply limit if provided
+      if (options.limit) {
+        query = query.limit(options.limit);
+      }
+
+      const { data, error } = await query;
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error(`Error getting feedback for mentor ${mentorId}:`, error);
+      throw error;
+    }
+  }
+
+  /**
    * Get all feedback with optional filters
    * @param {Object} filters - Filter criteria
    * @returns {Promise<Array>} Filtered feedback records

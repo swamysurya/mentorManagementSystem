@@ -1,15 +1,15 @@
 // src/pages/FeedbackPage.jsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import Calendar from "../components/Calendar";
-import "../assets/styles/feedback.css";
+import Navbar from "../../../components/common/Navbar";
+import Calendar from "../../../components/Calendar";
+import "../../../assets/styles/feedback.css";
 import {
   getFeedbackHistory,
   submitFeedback,
   getAllFeedbackDates,
-} from "../services/feedbackService";
-import { getSectionOptions } from "../services/optionService";
+} from "../../../services/feedbackService";
+import { getSectionOptions } from "../../../services/optionService";
 import { format, isAfter } from "date-fns";
 
 const FeedbackPage = () => {
@@ -194,7 +194,7 @@ const FeedbackPage = () => {
     if (error) {
       return <div className="error">{error}</div>;
     }
-
+    console.log(feedbackHistory);
     if (feedbackHistory.length > 0) {
       return (
         <div className="feedback-history">

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import CloudinaryStatusIndicator from "./CloudinaryStatusIndicator";
-import api from "../utils/axios";
+import CloudinaryStatusIndicator from "../../../components/CloudinaryStatusIndicator";
+import api from "../../../utils/common/axios";
 
 const RESOLUTION_STATUSES = ["open", "in_progress", "resolved"];
 

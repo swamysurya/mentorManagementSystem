@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import "../assets/styles/DoubtsPage.css";
+import "../../../assets/styles/DoubtsPage.css";
 import { FiTrash } from "react-icons/fi";
-import "../assets/styles/doubts.css";
-import Navbar from "../components/Navbar";
-import api from "../utils/axios";
+import "../../../assets/styles/doubts.css";
+import Navbar from "../../../components/common/Navbar";
+import api from "../../../utils/common/axios";
 
 const RESOLUTION_OPTIONS = ["Resolved", "In Progress", "Unresolved"];
 

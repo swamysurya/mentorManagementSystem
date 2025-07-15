@@ -1,15 +1,17 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { RouteGuard } from "./components/RouteGuard";
-import Login from "./pages/Login";
-import AdminDashboard from "./pages/AdminDashboard";
-import MentorDashboard from "./pages/MentorDashboard";
-import SchedulePage from "./pages/SchedulePage";
-import DoubtsPage from "./pages/DoubtsPage";
-import FeedbackPage from "./pages/FeedbackPage";
-import NotFound from "./pages/NotFound";
-import IssuesPage from "./pages/IssuesPage";
-import IssueDetail from "./pages/IssueDetail";
+import { RouteGuard } from "./components/common/RouteGuard";
+import Login from "./pages/common/Login";
+import AdminDashboard from "./pages/roles/rp/AdminDashboard";
+import MentorDashboard from "./pages/roles/mentor/MentorDashboard";
+import CDSDashboard from "./pages/roles/cds/CDSDashboard";
+import AllIssuesPage from "./pages/roles/cds/AllIssuesPage";
+import SchedulePage from "./pages/roles/mentor/SchedulePage";
+import DoubtsPage from "./pages/roles/mentor/DoubtsPage";
+import FeedbackPage from "./pages/roles/mentor/FeedbackPage";
+import NotFound from "./pages/common/NotFound";
+import IssuesPage from "./pages/roles/mentor/IssuesPage";
+import IssueDetail from "./pages/roles/mentor/IssueDetail";
 
 const App = () => {
   return (
@@ -41,6 +43,24 @@ const App = () => {
             element={
               <RouteGuard allowedRole="mentor">
                 <MentorDashboard />
+              </RouteGuard>
+            }
+          />
+
+          <Route
+            path="/cds"
+            element={
+              <RouteGuard allowedRole="CDS">
+                <CDSDashboard />
+              </RouteGuard>
+            }
+          />
+
+          <Route
+            path="/all-issues"
+            element={
+              <RouteGuard allowedRole="CDS">
+                <AllIssuesPage />
               </RouteGuard>
             }
           />

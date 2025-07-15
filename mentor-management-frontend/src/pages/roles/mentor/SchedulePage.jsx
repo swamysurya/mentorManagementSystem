@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import Navbar from "../components/Navbar";
-import "../assets/styles/shedule.css";
-import MentorWorkflow from "../components/MentorWorkflow";
-import AdvancedMentorTable from "../components/AdvancedMentorTable";
+import Navbar from "../../../components/common/Navbar";
+import "../../../assets/styles/shedule.css";
+import MentorWorkflow from "../../../components/roles/mentor/MentorWorkflow";
+import AdvancedMentorTable from "../../../components/roles/mentor/AdvancedMentorTable";
 
 const SchedulePage = () => {
   const navigate = useNavigate();
